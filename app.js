@@ -127,6 +127,7 @@ function closeLeadModal() {
   document.getElementById('lead-modal').classList.add('hidden');
 }
 
+// Handle Form Submit with Image Compression & Base64 Conversion
 document.getElementById('lead-form').addEventListener('submit', function(e) {
   e.preventDefault();
   const index = document.getElementById('lead-index').value;
@@ -140,10 +141,10 @@ document.getElementById('lead-form').addEventListener('submit', function(e) {
   const processLeadData = (photoBase64) => {
     const leadData = {
       name, phone, location, type, status,
-      photo: photoBase64 || (index !== '' ? leads[index].photo : '')
+      photo: photoBase64 || (index !== '' && leads[index] ? leads[index].photo : '')
     };
 
-    if (index !== '') {
+    if (index !== '' && index >= 0) {
       leads[index] = leadData;
     } else {
       leads.unshift(leadData);
