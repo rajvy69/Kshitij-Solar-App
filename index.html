@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>KSHITIJ SOLAR - Premium App</title>
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#D500A5">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<link rel="apple-touch-icon" href="logo.jpg">
+<style>
+*{box-sizing:border-box;font-family:'Segoe UI',system-ui}body{margin:0;background:#FFFACD;padding-bottom:95px;color:#111}
+.header{background:#FFFACD;text-align:center;padding:12px 12px 8px;border-bottom:4px solid #D500A5;position:sticky;top:0;z-index:20}
+.header img{width:100%;max-width:380px;border-radius:14px;display:block;margin:0 auto;box-shadow:0 4px 12px rgba(0,0,0,.15);background:#FFFACD}
+.header p{margin:6px 0 2px;font-weight:800;font-size:13px}.header small{color:#555}
+.call{display:inline-block;background:#D32F2F;color:#fff;padding:6px 14px;border-radius:999px;font-size:12px;font-weight:800;margin-top:4px}
+.stats{display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:12px}.stat{background:#fff;border-radius:16px;padding:13px;box-shadow:0 4px 10px rgba(0,0,0,.08);border-top:5px solid #FF6F00}.stat:nth-child(2){border-color:#D500A5}.stat:nth-child(3){border-color:#16a34a}.stat:nth-child(4){border-color:#D32F2F}.stat h2{margin:4px 0;font-size:24px}.stat small{color:#666}
+.card{background:#fff;border-radius:16px;padding:14px;margin:12px;box-shadow:0 4px 10px rgba(0,0,0,.08)}
+button{width:100%;padding:13px;border:0;border-radius:12px;background:#FF6F00;color:#fff;font-weight:800;font-size:15px;margin-top:8px;cursor:pointer}button.dark{background:#D32F2F}button.blue{background:#1a56db}button.green{background:#16a34a}button.gold{background:#FFD700;color:#000}button.out{background:#fff;color:#111;border:1px solid #ddd}
+input,select,textarea{width:100%;padding:12px;border:1px solid #e5d97a;border-radius:12px;margin:6px 0;background:#FFFEF0;font-size:15px}
+.item{background:#fff;border-radius:14px;padding:12px;margin:10px 0;border:1px solid #f0e68c}.pill{display:inline-block;padding:3px 10px;border-radius:999px;font-size:12px;font-weight:800}.Lead{background:#fef08a}.Survey{background:#bfdbfe}.Installation{background:#fed7aa}.Done{background:#bbf7d0}
+.row{display:flex;gap:8px}.row button{flex:1}.small{font-size:12px;color:#666}.hide{display:none}
+.bottom{position:fixed;bottom:0;left:0;right:0;background:#fff;display:flex;border-top:3px solid #D500A5;z-index:30}.bottom div{flex:1;text-align:center;padding:10px 2px;font-size:12px;font-weight:700;cursor:pointer}.bottom div.on{color:#FF6F00}
+.quote{border:2px dashed #FF6F00;background:#FFFBEB;padding:12px;border-radius:12px}
+.topbar{display:flex;gap:8px;overflow:auto;padding:0 12px}.topbar span{white-space:nowrap;background:#fff;border:1px solid #e5d97a;padding:8px 12px;border-radius:999px;font-weight:700;font-size:13px}
+</style></head><body>
+
+<div class="header">
+<img src="logo.jpg" alt="KSHITIJ - Infrastructure & Housing - Since 2016" onerror="this.style.display='none';document.getElementById('logoFallback').style.display='block'">
+<div id="logoFallback" style="display:none"><h2 style="margin:0">KSHITIJ</h2><p>Infrastructure & Housing - Since 2016</p></div>
+<p>KSHITIJ SOLAR - Admin + Technical - Offline App</p>
+<span class="call">Rajeev Vyas : 9044015800 - Rakesh Pandey : 9990100888</span>
+</div>
+
+<div class="stats">
+<div class="stat"><small>Total Leads</small><h2 id="sLead">0</h2><span class="small">Total Business</span></div>
+<div class="stat"><small>Pending Work</small><h2 id="sPend">0</h2><span class="small">Survey + Installation</span></div>
+<div class="stat"><small>Completed</small><h2 id="sDone">0</h2><span class="small">Happy Customers</span></div>
+<div class="stat"><small>Payment Pending</small><h2 id="sPay">Rs 0</h2><span class="small">To Collect</span></div>
+</div>
+
+<div class="topbar"><span onclick="go('home')">Home</span><span onclick="go('leads')">Leads</span><span onclick="go('quote')">Quotation</span><span onclick="go('payment')">Payment</span><span onclick="go('team')">Team / Stock / Service</span></div>
+
+<div id="page-home">
+<div class="card"><h3 style="margin:0">Quick Actions</h3><div class="row"><button onclick="go('leads')">+ New Lead</button><button class="blue" onclick="go('quote')">Quotation</button></div><div class="row"><button class="green" onclick="go('payment')">+ Payment</button><button class="gold" onclick="go('quote')">Calculator</button></div></div>
+<div class="card"><h3 style="margin:0">Search Customer</h3><input id="search" placeholder="Search by Name / Phone / Area..." oninput="render()"></div>
+<div style="padding:0 12px"><h3>Latest Leads</h3><div id="homeList"></div></div>
+</div>
+
+<div id="page-leads" class="hide"><div class="card"><h3>Add New Lead</h3>
+<input id="lName" placeholder="Customer Name *"><input id="lPhone" placeholder="Mobile Number *"><input id="lArea" placeholder="Area / Address">
+<select id="lKw"><option value="3">3 kW</option><option value="5" selected>5 kW</option><option value="8">8 kW</option><option value="10">10 kW</option><option value="15">15 kW+</option></select>
+<select id="lStatus"><option>Lead</option><option>Survey</option><option>Installation</option><option>Done</option></select>
+<input id="lNote" placeholder="Note - Roof / Requirement"><button onclick="addLead()">Save Lead + WhatsApp Welcome</button></div>
+<div style="padding:0 12px"><h3>All Leads</h3><div id="leadList"></div></div></div>
+
+<div id="page-quote" class="hide">
+<div class="card"><h3>Smart Quotation <span style="color:#D32F2F">- Up to Rs 1,08,000 Subsidy</span></h3>
+<input id="qName" placeholder="Customer Name"><input id="qKw" type="number" value="5" oninput="calcQuote()"><input id="qRate" type="number" value="55000" oninput="calcQuote()">
+<select id="qSub" onchange="calcQuote()"><option value="78000">Subsidy 3kW - Rs 78,000</option><option value="108000" selected>Subsidy 5kW+ - Rs 1,08,000</option><option value="0">No Subsidy</option></select>
+<div class="quote" id="qOut"></div>
+<button onclick="calcQuote()">Recalculate</button><button class="dark" onclick="window.print()">Download / Print PDF</button><button class="green" onclick="sendWA()">Send Quotation on WhatsApp</button></div>
+<div class="card"><h3>Solar Saving Calculator</h3><input id="cKw" type="number" value="5" oninput="calcSave()"><div id="cOut" style="font-weight:700"></div></div>
+</div>
+
+<div id="page-payment" class="hide"><div class="card"><h3>Payment Entry</h3><input id="pName" placeholder="Customer Name"><input id="pAmt" type="number" placeholder="Amount Received"><select id="pMode"><option>Cash</option><option>UPI</option><option>Bank Transfer</option><option>Cheque</option></select><button class="green" onclick="addPay()">Save Payment + Receipt</button></div><div style="padding:0 12px"><h3>Payment History</h3><div id="payList"></div></div></div>
+
+<div id="page-team" class="hide">
+<div class="card"><h3>Team Management</h3><input id="tName" placeholder="Team Member Name"><select id="tRole"><option>Technical</option><option>Survey</option><option>Installation</option><option>Admin</option></select><button onclick="addTeam()">+ Add Team Member</button><div id="teamList"></div></div>
+<div class="card"><h3>Material / Stock</h3><input id="mName" placeholder="Panel / Inverter / Wire"><input id="mQty" type="number" placeholder="Quantity"><button class="blue" onclick="addMat()">+ Add Material</button><div id="matList"></div></div>
+<div class="card"><h3>Service / Complaint</h3><input id="sName" placeholder="Customer + Problem"><button class="gold" onclick="addSer()">+ Add Service Request</button><div id="serList"></div></div>
+<div class="card"><h3>Backup / Excel</h3><button onclick="backup()">Download Backup</button><button class="out" onclick="if(confirm('Delete all data? Take backup first!')){localStorage.clear();location.reload()}">Clear All Data</button></div>
+</div>
+
+<div class="bottom"><div id="b-home" class="on" onclick="go('home')">Home</div><div id="b-leads" onclick="go('leads')">Leads</div><div id="b-quote" onclick="go('quote')">Quote</div><div id="b-payment" onclick="go('payment')">Payment</div><div id="b-team" onclick="go('team')">More</div></div>
+
+<script>
+let leads=JSON.parse(localStorage.getItem('ks_leads')||'[]'),pays=JSON.parse(localStorage.getItem('ks_pays')||'[]'),team=JSON.parse(localStorage.getItem('ks_team')||'["Amit - Technical","Rahul - Installation"]'),mats=JSON.parse(localStorage.getItem('ks_mats')||'[]'),sers=JSON.parse(localStorage.getItem('ks_sers')||'[]');
+function save(){localStorage.setItem('ks_leads',JSON.stringify(leads));localStorage.setItem('ks_pays',JSON.stringify(pays));localStorage.setItem('ks_team',JSON.stringify(team));localStorage.setItem('ks_mats',JSON.stringify(mats));localStorage.setItem('ks_sers',JSON.stringify(sers));render()}
+function go(p){['home','leads','quote','payment','team'].forEach(x=>{document.getElementById('page-'+x).classList.toggle('hide',x!==p);document.getElementById('b-'+x).classList.toggle('on',x===p)});window.scrollTo(0,0)}
+function addLead(){let n=lName.value.trim(),ph=lPhone.value.trim();if(!n||!ph){alert('Name + Phone required');return}leads.unshift({n,ph,a:lArea.value,kw:lKw.value,st:lStatus.value,note:lNote.value,d:new Date().toLocaleDateString('en-IN')});lName.value=lPhone.value=lArea.value=lNote.value='';save();window.open('https://wa.me/91'+ph+'?text='+encodeURIComponent('Namaste '+n+' ji, Welcome to KSHITIJ SOLAR! We will contact you soon for '+leads[0].kw+'kW Solar. - Rajeev Vyas 9044015800'))}
+function addPay(){if(!pName.value||!pAmt.value){alert('Name + Amount required');return}pays.unshift({n:pName.value,amt:+pAmt.value,mode:pMode.value,d:new Date().toLocaleDateString('en-IN')});pName.value=pAmt.value='';save();alert('Payment Saved!')}
+function addTeam(){if(!tName.value)return;team.push(tName.value+' - '+tRole.value);tName.value='';save()}
+function addMat(){if(!mName.value)return;mats.unshift(mName.value+' - Qty: '+(mQty.value||1));mName.value=mQty.value='';save()}
+function addSer(){if(!sName.value)return;sers.unshift(sName.value);sName.value='';save()}
+function calcQuote(){let kw=+qKw.value||0,rate=+qRate.value||0,sub=+qSub.value||0,total=kw*rate,gst=Math.round(total*0.13),net=total+gst-sub;qOut.innerHTML='<b>KSHITIJ SOLAR - QUOTATION</b><br>'+(qName.value||'Customer')+' - '+kw+' kW<br>Base: Rs '+total.toLocaleString('en-IN')+'<br>GST: Rs '+gst.toLocaleString('en-IN')+'<br>Subsidy (-): Rs '+sub.toLocaleString('en-IN')+'<hr><b>Final Payable: Rs '+net.toLocaleString('en-IN')+'</b><br><span class="small">Advance 20% = Rs '+Math.round(net*0.2).toLocaleString('en-IN')+'</span>';return net}
+function calcSave(){let kw=+cKw.value||5,u=kw*120,s=u*7;cOut.innerHTML=kw+' kW = '+u+' Unit / Month<br>Saving: Rs '+s.toLocaleString('en-IN')+'/Month - Rs '+(s*12).toLocaleString('en-IN')+'/Year<br>Payback: ~3.5 Years - 25 Years Free Electricity'}
+function sendWA(){let net=calcQuote();window.open('https://wa.me/?text='+encodeURIComponent('KSHITIJ SOLAR QUOTATION\nCustomer: '+(qName.value||'')+'\n'+qKw.value+'kW - Final: Rs '+net.toLocaleString('en-IN')+' (After Subsidy)\nRajeev Vyas 9044015800'))}
+function backup(){let d=JSON.stringify({leads,pays,team,mats,sers},null,2);let a=document.createElement('a');a.href='data:text/plain,[STRIPPED] Downloaded!')}
+function render(){let q=(search?.value||'').toLowerCase();let fl=leads.filter(l=>(l.n+l.ph+l.a).toLowerCase().includes(q));let pend=leads.filter(l=>l.st!=='Done').length,done=leads.filter(l=>l.st==='Done').length;let payPend=leads.reduce((s,l)=>s+(+l.kw*55000*0.8||0),0)-pays.reduce((s,p)=>s+p.amt,0);sLead.textContent=leads.length;sPend.textContent=pend;sDone.textContent=done;sPay.textContent='Rs '+Math.max(0,Math.round(payPend)).toLocaleString('en-IN');let h=fl.map((l,i)=>'<div class="item"><div style="display:flex;justify-content:space-between"><b>'+l.n+' - '+l.kw+'kW</b><span class="small">'+l.d+'</span></div><div class="small">'+l.ph+' - '+l.a+'</div><span class="pill '+l.st+'">'+l.st+'</span> '+(l.note?' - '+l.note:'')+'<div class="row"><button class="blue" onclick="window.open(\'https://wa.me/91'+l.ph+'\')">WhatsApp</button><button class="out" onclick="if(confirm(\'Delete?\')){leads.splice('+leads.indexOf(l)+',1);save()}">Delete</button></div></div>').join('')||'<p class="small">No leads yet. Add from + New Lead.</p>';homeList.innerHTML=h;leadList.innerHTML=h;payList.innerHTML=pays.map(p=>'<div class="item"><b>'+p.n+'</b> - Rs '+p.amt.toLocaleString('en-IN')+' - '+p.mode+'<br><span class="small">'+p.d+'</span></div>').join('')||'<p class="small">No payment yet.</p>';teamList.innerHTML=team.map((t,i)=>'<div class="item" style="display:flex;justify-content:space-between">'+t+' <button style="width:auto;padding:6px 12px" class="out" onclick="team.splice('+i+',1);save()">Delete</button></div>').join('');matList.innerHTML=mats.map(m=>'<div class="item">'+m+'</div>').join('');serList.innerHTML=sers.map(s=>'<div class="item">'+s+'</div>').join('')}
+calcQuote();calcSave();render();
+if('serviceWorker' in navigator){navigator.serviceWorker.register('sw.js')}
+</script></body></html>
