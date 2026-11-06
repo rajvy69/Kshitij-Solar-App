@@ -1,12 +1,21 @@
-self.addEventListener('install', e => {
+self.addEventListener('install', (e) => {
   e.waitUntil(
-    caches.open('kshitij-v1').then(cache => {
-      return cache.addAll(['./','./index.html','./manifest.json','./logo.jpg']);
+    caches.open('kshitij-solar-v1').then((cache) => {
+      return cache.addAll([
+        './index.html',
+        './style.css',
+        './app.js',
+        './manifest.json',
+        './logo.jpg'
+      ]);
     })
   );
 });
-self.addEventListener('fetch', e => {
+
+self.addEventListener('fetch', (e) => {
   e.respondWith(
-    caches.match(e.request).then(res => res || fetch(e.request))
+    caches.match(e.request).then((response) => {
+      return response || fetch(e.request);
+    })
   );
 });
