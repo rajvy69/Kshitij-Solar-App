@@ -1,225 +1,53 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Kshitij Solar Operations</title>
-  <link rel="manifest" href="manifest.json">
-  <link rel="stylesheet" href="style.css">
-  <script src="https://cdn.tailwindcss.com"></script>
-</head>
-<body class="min-h-screen flex flex-col bg-[#FFFDE7]">
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>KSHITIJ SOLAR - Lucknow</title><link rel="manifest" href="manifest.json"><link rel="stylesheet" href="style.css">
+<script src="https://cdn.sheetjs.com/xlsx-0.20.2/package/dist/xlsx.full.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script></head><body>
 
-  <!-- Top App Bar with Real Logo -->
-  <header class="bg-[#D32F2F] text-white shadow-lg sticky top-0 z-40 border-b-4 border-[#FFD54F]">
-    <div class="max-w-4xl mx-auto px-4 py-3 flex justify-between items-center">
-      <div class="flex items-center space-x-3">
-        <!-- Renders your actual logo.jpg file -->
-        <img src="logo.jpg" alt="Kshitij Solar Logo" class="w-10 h-10 object-contain rounded-xl bg-white p-0.5 shadow-md">
-        <div>
-          <h1 class="text-base font-extrabold tracking-wider">KSHITIJ SOLAR</h1>
-          <p class="text-[10px] text-yellow-200 tracking-wide font-medium">Infrastructure & Housing | Lucknow</p>
-        </div>
-      </div>
-      <div class="flex items-center space-x-2">
-        <span id="role-badge" class="bg-[#FFD54F] text-black text-xs px-2.5 py-1 rounded-full font-bold shadow-sm">Role: ...</span>
-        <button onclick="openRoleModal()" class="bg-black/20 hover:bg-black/30 text-white px-2.5 py-1 rounded-lg text-xs font-semibold transition">Switch</button>
-      </div>
-    </div>
-  </header>
+<div id="loginPage">
+<div style="text-align:center;padding:28px 16px"><img src="logo.jpg" style="width:84px;height:84px;object-fit:contain;background:#fff;border-radius:18px;padding:8px;box-shadow:0 6px 18px rgba(0,0,0,.12)"><h2 style="margin:12px 0 4px">KSHITIJ SOLAR</h2><p style="color:#666;margin:0;font-size:13px">Infrastructure & Housing | Lucknow</p><p style="color:#D500A5;font-weight:700;font-size:13px">Solar Energy For Better Tomorrow</p></div>
+<div class="card"><h3>Welcome Back</h3><div class="row"><button id="btnAdmin" onclick="pickRole('Admin')">👑 Admin</button><button id="btnTeam" class="ghost" onclick="pickRole('Team')">👥 Team</button></div>
+<input id="uName" placeholder="Your Name *"><input id="uTeam" placeholder="Team Name - e.g. Lucknow Team"><input id="uPass" type="password" placeholder="Admin Password - kshitij123"><select id="uRole"><option value="Admin">Admin - Full Rights</option><option value="Team Head">Team Head</option><option value="Sales">Sales Executive</option></select>
+<button onclick="doLogin()">Login to App →</button><p style="font-size:12px;color:#888">Admin: Use password kshitij123 • Team: Any password, Team Name must match.</p></div>
+</div>
 
-  <!-- Navigation Bar -->
-  <nav class="bg-white shadow-sm border-b border-orange-100 sticky top-[65px] z-30">
-    <div class="max-w-4xl mx-auto flex overflow-x-auto space-x-1 px-2 py-1">
-      <button onclick="switchTab('leads')" class="tab-btn flex-1 py-2.5 px-3 font-bold text-xs md:text-sm border-b-2 border-[#D32F2F] text-[#D32F2F] whitespace-nowrap rounded-t-lg transition">📋 Leads</button>
-      <button onclick="switchTab('calculator')" class="tab-btn flex-1 py-2.5 px-3 font-semibold text-xs md:text-sm border-b-2 border-transparent text-gray-600 hover:text-[#D32F2F] whitespace-nowrap rounded-t-lg transition">⚡ Quote</button>
-      <button onclick="switchTab('upneda')" class="tab-btn flex-1 py-2.5 px-3 font-semibold text-xs md:text-sm border-b-2 border-transparent text-gray-600 hover:text-[#D32F2F] whitespace-nowrap rounded-t-lg transition">🏛️ UPNEDA</button>
-      <button onclick="switchTab('inventory')" class="tab-btn flex-1 py-2.5 px-3 font-semibold text-xs md:text-sm border-b-2 border-transparent text-gray-600 hover:text-[#D32F2F] whitespace-nowrap rounded-t-lg transition">📦 Stock</button>
-    </div>
-  </nav>
+<header class="topbar-red">
+<img src="logo.jpg" class="topLogo"><div class="topTitle"><b>KSHITIJ SOLAR</b><span>Infrastructure & Housing | Lucknow</span></div>
+<div class="topRight"><span id="modeLabel" class="modeBtn">Field</span><button class="switchBtn" onclick="openSwitch()">Switch</button></div>
+</header>
 
-  <!-- Main Workspace -->
-  <main class="flex-grow max-w-4xl w-full mx-auto p-4 space-y-4">
+<div id="switchPopup" class="popup" style="display:none"><div class="popupBox"><h3>Switch View To</h3>
+<button onclick="setMode('Field')">👷 Field Team View — Only My Leads</button>
+<button class="ghost" onclick="setMode('Office')">🏢 Office / Admin View — All + Excel + Masters</button>
+<button class="ghost" onclick="setMode('Team')">👥 Team View — Lucknow Team Only</button>
+<button class="ghost" onclick="closeSwitch()">Cancel</button></div></div>
 
-    <!-- TAB 1: LEADS & PIPELINE -->
-    <section id="leads-section" class="tab-content space-y-4">
-      <div class="bg-gradient-to-r from-red-50 to-orange-50 p-4 rounded-2xl shadow-sm border border-orange-200 flex justify-between items-center">
-        <div>
-          <h2 class="text-base font-extrabold text-[#D32F2F]">Customer Pipeline</h2>
-          <p class="text-xs text-gray-600">Active site visits and inquiry tracking</p>
-        </div>
-        <button onclick="openLeadModal()" class="bg-[#D32F2F] hover:bg-red-700 text-white font-bold py-2 px-4 rounded-xl text-xs md:text-sm shadow-md transition transform active:scale-95">+ Add Lead</button>
-      </div>
+<div class="followTop" id="followTop"></div>
+<div class="stats"><div class="stat"><small>Total Leads</small><b id="c1">0</b><span>Visible to you</span></div><div class="stat"><small>New Leads</small><b id="c2">0</b><span>Need follow-up</span></div><div class="stat"><small>Site Visit</small><b id="c3">0</b><span>Scheduled</span></div><div class="stat"><small>Installed</small><b id="c4">0</b><span>Completed</span></div></div>
 
-      <!-- Leads Container (Card Layout) -->
-      <div id="leads-container" class="space-y-3">
-        <!-- Dynamically rendered beautiful cards go here -->
-      </div>
-    </section>
+<div class="card" id="masterCard"><h3>⚙️ Master Settings <span style="font-size:12px;color:#888">(Admin Only)</span></h3><p style="font-size:13px;color:#666">Add / Edit / Delete Panel, Inverter, Structure, Documents here. It will appear in Add Lead dropdown for all.</p>
+<select id="masterType"><option value="panels">Panel Brands</option><option value="inverters">Inverter Brands</option><option value="structures">Structure Types</option><option value="docs">Document Types</option></select>
+<input id="masterVal" placeholder="Type new value e.g. UTL, Livguard, PAN Card"><div class="row"><button onclick="addMaster()">➕ Add to Master</button><button class="ghost" onclick="delMaster()">🗑️ Delete Selected</button></div><div id="masterList" style="font-size:13px;margin-top:8px"></div></div>
 
-    <!-- TAB 2: QUICK QUOTATION CALCULATOR -->
-    <section id="calculator-section" class="tab-content hidden space-y-4">
-      <div class="bg-white p-6 rounded-2xl shadow-sm border border-orange-100 space-y-4">
-        <h2 class="text-base font-extrabold text-[#D32F2F]">Instant Solar Sizing & Cost Estimator</h2>
-        <div class="space-y-3">
-          <div>
-            <label class="block text-xs font-bold text-gray-700 mb-1">Average Monthly Electricity Bill (₹)</label>
-            <input type="number" id="calc-bill" placeholder="e.g. 4500" class="w-full p-3 bg-gray-50 border border-gray-200 rounded-xl text-sm focus:ring-2 focus:ring-[#D32F2F] outline-none">
-          </div>
-          <div>
-            <label class="block text-xs font-bold text-gray-700 mb-1">Roof Shadow-Free Area (Sq. Ft.)</label>
-            <input type="number" id="calc-area" placeholder="e.g. 300" class="w-full p-3 bg-gray-50 border border-gray-200 rounded-xl text-sm focus:ring-2 focus:ring-[#D32F2F] outline-none">
-          </div>
-          <button onclick="calculateSolar()" class="w-full bg-[#F57C00] hover:bg-orange-700 text-white font-bold py-3 rounded-xl text-sm shadow-md transition">Calculate System & Subsidy</button>
-          
-          <div id="calc-results" class="hidden mt-4 p-4 bg-yellow-50 border border-yellow-200 rounded-xl space-y-2 text-sm shadow-inner">
-            <h3 class="font-bold text-gray-900 border-b border-yellow-200 pb-2">Estimated Proposal Summary</h3>
-            <p><strong>Recommended Capacity:</strong> <span id="res-kw" class="text-[#D32F2F] font-bold"></span> kW</p>
-            <p><strong>Estimated Gross Cost:</strong> ₹<span id="res-cost"></span></p>
-            <p><strong>Estimated Central Subsidy:</strong> ₹<span id="res-subsidy" class="text-green-700 font-bold"></span></p>
-            <p class="text-base pt-1 font-black text-[#D32F2F]">Net Customer Investment: ₹<span id="res-net"></span></p>
-          </div>
-        </div>
-      </div>
-    </section>
+<div class="card" id="excelCard"><h3>📥 Import / Export Excel</h3><input type="file" id="excelFile" accept=".xlsx,.xls,.csv"><button onclick="importExcel()">📥 Import Excel & Update All</button><button class="ghost" onclick="exportExcel()">📤 Export to Excel</button><p id="impMsg" style="font-size:13px;color:green"></p></div>
 
-    <!-- TAB 3: UPNEDA CHECKLIST -->
-    <section id="upneda-section" class="tab-content hidden space-y-4">
-      <div class="bg-white p-6 rounded-2xl shadow-sm border border-orange-100 space-y-3">
-        <h2 class="text-base font-extrabold text-[#D32F2F]">UPNEDA Subsidy Compliance Checklist</h2>
-        <p class="text-xs text-gray-500">Tap items to mark verification progress.</p>
-        
-        <div class="space-y-2">
-          <label class="flex items-center space-x-3 p-3 bg-gray-50 rounded-xl border border-gray-200 cursor-pointer hover:bg-orange-50 transition">
-            <input type="checkbox" class="w-5 h-5 text-[#D32F2F] rounded">
-            <span class="text-sm font-semibold text-gray-800">Aadhaar Card & Property Ownership Proof</span>
-          </label>
-          <label class="flex items-center space-x-3 p-3 bg-gray-50 rounded-xl border border-gray-200 cursor-pointer hover:bg-orange-50 transition">
-            <input type="checkbox" class="w-5 h-5 text-[#D32F2F] rounded">
-            <span class="text-sm font-semibold text-gray-800">Latest Electricity Bill (No Dues)</span>
-          </label>
-          <label class="flex items-center space-x-3 p-3 bg-gray-50 rounded-xl border border-gray-200 cursor-pointer hover:bg-orange-50 transition">
-            <input type="checkbox" class="w-5 h-5 text-[#D32F2F] rounded">
-            <span class="text-sm font-semibold text-gray-800">Geotagged Roof Photograph & Assessment</span>
-          </label>
-          <label class="flex items-center space-x-3 p-3 bg-gray-50 rounded-xl border border-gray-200 cursor-pointer hover:bg-orange-50 transition">
-            <input type="checkbox" class="w-5 h-5 text-[#D32F2F] rounded">
-            <span class="text-sm font-semibold text-gray-800">Net Metering Application Portal Filing</span>
-          </label>
-          <label class="flex items-center space-x-3 p-3 bg-gray-50 rounded-xl border border-gray-200 cursor-pointer hover:bg-orange-50 transition">
-            <input type="checkbox" class="w-5 h-5 text-[#D32F2F] rounded">
-            <span class="text-sm font-semibold text-gray-800">Joint Inspection & Commissioning Report</span>
-          </label>
-        </div>
-      </div>
-    </section>
+<div class="card"><h3>➕ Add New Lead</h3>
+<div class="row"><input id="fName" placeholder="Customer Name *"><input id="fMobile" placeholder="Mobile *"></div>
+<input id="fVillage" placeholder="Village / City / Address">
+<div class="row"><select id="fInterest"><option>Rooftop Solar</option><option>Ground Mount</option><option>Commercial</option><option>Water Pump</option></select><select id="fStatus"><option>New</option><option>Contacted</option><option>Follow-up</option><option>Site Visit</option><option>Quotation</option><option>Installed</option><option>Lost</option></select></div>
+<h3 style="margin:14px 0 6px">☀️ Solar System Details</h3>
+<div class="row"><select id="fPanel"></select><select id="fWatt"><option>540 Watt</option><option>545 Watt</option><option>550 Watt</option><option>580 Watt</option><option>600 Watt</option></select></div>
+<div class="row"><select id="fSize"><option>1 kW</option><option>2 kW</option><option>3 kW</option><option>5 kW</option><option>10 kW</option><option>15 kW</option><option>20 kW</option></select><select id="fInv"></select></div>
+<div class="row"><select id="fInvType"><option>On-Grid</option><option>Off-Grid</option><option>Hybrid</option></select><select id="fStruct"></select></div>
+<h3 style="margin:14px 0 6px">💰 Price & Payment</h3>
+<div class="row"><input id="fPrice" type="number" placeholder="Price ₹"><input id="fSubsidy" type="number" placeholder="Subsidy ₹"></div>
+<div class="row"><input id="fAdvance" type="number" placeholder="Advance ₹"><select id="fPay"><option>Pending</option><option>Partial</option><option>Full Paid</option></select></div>
+<div class="row"><input id="fFollow" type="date"><input id="fInstall" type="date"></div>
+<textarea id="fRemark" placeholder="Remark / Follow-up Note"></textarea>
+<h3 style="margin:12px 0 6px">📄 Documents For Subsidy</h3><div id="docChecks"></div>
+<button onclick="addLead()">✅ Save Lead</button></div>
 
-    <!-- TAB 4: INVENTORY STOCK LOG -->
-    <section id="inventory-section" class="tab-content hidden space-y-4">
-      <div class="bg-white rounded-2xl shadow-sm border border-orange-100 overflow-hidden p-5 space-y-3">
-        <div class="flex justify-between items-center border-b pb-2">
-          <h3 class="font-extrabold text-[#D32F2F]">Warehouse Stock</h3>
-          <span class="text-xs bg-purple-100 text-[#8E24AA] font-bold px-2.5 py-1 rounded-full">Lucknow Godown</span>
-        </div>
-        <div class="space-y-2">
-          <div class="p-3 bg-gray-50 rounded-xl border flex justify-between items-center">
-            <div><strong>Solar Panels (550W)</strong><p class="text-xs text-gray-500">Mono PERC Half-Cut</p></div>
-            <span class="bg-green-100 text-green-800 font-bold text-xs px-2.5 py-1 rounded-lg">140 Units</span>
-          </div>
-          <div class="p-3 bg-gray-50 rounded-xl border flex justify-between items-center">
-            <div><strong>Grid-Tie Inverter (5kW)</strong><p class="text-xs text-gray-500">Single Phase</p></div>
-            <span class="bg-orange-100 text-[#F57C00] font-bold text-xs px-2.5 py-1 rounded-lg">12 Units (Low)</span>
-          </div>
-          <div class="p-3 bg-gray-50 rounded-xl border flex justify-between items-center">
-            <div><strong>Mounting Structures</strong><p class="text-xs text-gray-500">HDG Elevated Racks</p></div>
-            <span class="bg-green-100 text-green-800 font-bold text-xs px-2.5 py-1 rounded-lg">45 Sets</span>
-          </div>
-        </div>
-      </div>
-    </section>
-
-  </main>
-
-  <!-- ADD / EDIT LEAD MODAL -->
-  <div id="lead-modal" class="fixed inset-0 bg-black/60 backdrop-blur-sm hidden flex items-center justify-center p-4 z-50">
-    <div class="bg-white rounded-2xl shadow-2xl max-w-md w-full p-6 space-y-4 border-t-4 border-[#D32F2F]">
-      <div class="flex justify-between items-center border-b pb-3">
-        <h3 id="modal-title" class="font-extrabold text-[#D32F2F] text-lg">Add Customer Inquiry</h3>
-        <button onclick="closeLeadModal()" class="text-gray-400 hover:text-black font-bold text-lg">✕</button>
-      </div>
-      <form id="lead-form" class="space-y-3">
-        <input type="hidden" id="lead-index">
-        <div>
-          <label class="block text-xs font-bold text-gray-700 mb-1">Customer Name</label>
-          <input type="text" id="modal-name" required class="w-full p-3 bg-gray-50 border rounded-xl text-sm outline-none focus:ring-2 focus:ring-[#D32F2F]">
-        </div>
-        <div>
-          <label class="block text-xs font-bold text-gray-700 mb-1">Phone Number</label>
-          <input type="tel" id="modal-phone" required class="w-full p-3 bg-gray-50 border rounded-xl text-sm outline-none focus:ring-2 focus:ring-[#D32F2F]">
-        </div>
-        <div>
-          <label class="block text-xs font-bold text-gray-700 mb-1">Locality (e.g. Jankipuram)</label>
-          <input type="text" id="modal-location" required class="w-full p-3 bg-gray-50 border rounded-xl text-sm outline-none focus:ring-2 focus:ring-[#D32F2F]">
-        </div>
-        <div class="grid grid-cols-2 gap-2">
-          <div>
-            <label class="block text-xs font-bold text-gray-700 mb-1">System Type</label>
-            <select id="modal-type" class="w-full p-3 bg-gray-50 border rounded-xl text-sm outline-none">
-              <option value="Rooftop">Rooftop</option>
-              <option value="Commercial">Commercial</option>
-              <option value="Pump">Solar Pump</option>
-              <option value="StreetLight">Street Light</option>
-            </select>
-          </div>
-          <div>
-            <label class="block text-xs font-bold text-gray-700 mb-1">Status</label>
-            <select id="modal-status" class="w-full p-3 bg-gray-50 border rounded-xl text-sm outline-none">
-              <option value="New Lead">New Lead</option>
-              <option value="Survey Scheduled">Survey Scheduled</option>
-              <option value="Proposal Sent">Proposal Sent</option>
-              <option value="UPNEDA Pending">UPNEDA Pending</option>
-              <option value="Completed">Completed</option>
-            </select>
-          </div>
-        </div>
-        <div>
-          <label class="block text-xs font-bold text-gray-700 mb-1">Site Survey Photo (Snap or Upload)</label>
-          <input type="file" id="modal-photo" accept="image/*" capture="environment" class="w-full p-2 bg-gray-50 border rounded-xl text-xs">
-          <div id="photo-preview-container" class="mt-2 hidden">
-            <span class="text-[10px] text-gray-500 font-bold">Attached Photo:</span>
-            <img id="photo-preview" class="w-16 h-16 object-cover rounded-xl border mt-1 shadow-sm">
-          </div>
-        </div>
-        <div class="flex space-x-2 pt-2">
-          <button type="button" onclick="closeLeadModal()" class="w-1/2 bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-3 rounded-xl text-sm transition">Cancel</button>
-          <button type="submit" class="w-1/2 bg-[#D32F2F] hover:bg-red-700 text-white font-bold py-3 rounded-xl text-sm shadow-md transition">Save Lead</button>
-        </div>
-      </form>
-    </div>
-  </div>
-
-  <!-- ROLE MODAL -->
-  <div id="role-modal" class="fixed inset-0 bg-black/70 backdrop-blur-sm hidden flex items-center justify-center p-4 z-50">
-    <div class="bg-white rounded-2xl shadow-2xl max-w-xs w-full p-6 text-center space-y-4 border-t-4 border-[#FFD54F]">
-      <h3 class="text-base font-extrabold text-[#D32F2F]">Select App Role</h3>
-      <p class="text-xs text-gray-500">Configure your permissions for this phone.</p>
-      <div class="space-y-2.5">
-        <button onclick="setRole('Admin')" class="w-full bg-[#D32F2F] text-white font-bold py-3 rounded-xl text-xs shadow-md hover:bg-red-700 transition">👑 Partner / Admin</button>
-        <button onclick="setRole('Office')" class="w-full bg-[#F57C00] text-white font-bold py-3 rounded-xl text-xs shadow-md hover:bg-orange-700 transition">💼 Office / Sales Team</button>
-        <button onclick="setRole('Field')" class="w-full bg-[#8E24AA] text-white font-bold py-3 rounded-xl text-xs shadow-md hover:bg-purple-800 transition">🛠️ Field Installation</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- LIGHTBOX -->
-  <div id="lightbox-modal" class="fixed inset-0 bg-black/90 hidden flex items-center justify-center p-4 z-50" onclick="closeLightbox()">
-    <img id="lightbox-img" class="max-w-full max-h-[85vh] rounded-2xl shadow-2xl border-2 border-white/20">
-  </div>
-
-  <footer class="bg-gray-900 text-white text-center py-4 text-xs mt-auto">
-    <p class="text-gray-400">Kshitij Solar Operations • Jankipuram, Lucknow</p>
-  </footer>
-
-  <script src="app.js"></script>
-</body>
-</html>
+<div class="card"><h3>🔍 Search Leads</h3><input id="search" placeholder="Search by Name / Mobile / Village" oninput="render()"></div>
+<div id="list"></div>
+<div class="bottom"><div class="on">🏠<br>Home</div><div onclick="document.getElementById('search').focus()">🔍<br>Search</div><div onclick="window.scrollTo({top:0,behavior:'smooth'})">➕<br>Add</div><div onclick="exportExcel()">📤<br>Excel</div></div>
+<script src="app.js"></script></body></html>
