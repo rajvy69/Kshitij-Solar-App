@@ -1,0 +1,17 @@
+{
+  "name": "KSHITIJ SOLAR",
+  "short_name": "KSHITIJ",
+  "description": "Kshitij Infrastructure & Housing - Since 2016 - Solar App",
+  "start_url": ".",
+  "display": "standalone",
+  "background_color": "#FFFACD",
+  "theme_color": "#D500A5",
+  "icons": [
+    {
+      "src": "logo.jpg",
+      "sizes": "512x512",
+      "type": "image/jpeg",
+      "purpose": "any"
+    }
+  ]
+}
