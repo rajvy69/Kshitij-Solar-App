@@ -1,76 +1,224 @@
 <!DOCTYPE html>
-<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>KSHITIJ SOLAR - Premium CRM</title>
-<script src="https://cdn.sheetjs.com/xlsx-0.20.2/package/dist/xlsx.full.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-<style>
-*{box-sizing:border-box}body{margin:0;font-family:'Segoe UI',system-ui,sans-serif;background:#FFF8E1;color:#1A1A1A;overflow-x:hidden;padding-bottom:130px}
-.header{background:#fff;padding:18px 16px 14px;text-align:center;border-bottom:1px solid #FFE082;box-shadow:0 6px 20px rgba(0,0,0,.06);position:sticky;top:0;z-index:10}
-.header img{width:88%;max-width:310px;height:auto;object-fit:contain;display:block;margin:0 auto;border-radius:14px;background:#FFFDE7;padding:8px;box-shadow:0 4px 14px rgba(0,0,0,.08)}
-.header h1{font-size:15px;margin:12px 0 0}.header p{margin:8px 0 0;font-size:12.5px;font-weight:700;color:#fff;background:linear-gradient(90deg,#D500A5,#FF6D00);display:inline-block;padding:7px 16px;border-radius:999px}
-.followTop{background:linear-gradient(90deg,#FFF3C4,#FFE082);margin:16px;border-radius:18px;padding:16px;box-shadow:0 6px 16px rgba(0,0,0,.06);border:1px solid #FFD54F}
-.stats{display:grid;grid-template-columns:1fr 1fr;gap:16px;padding:8px 16px}
-.stat{background:#fff;border-radius:20px;padding:18px;box-shadow:0 8px 20px rgba(0,0,0,.07);border-top:4px solid #FF6D00}.stat:nth-child(2){border-top-color:#D500A5}.stat:nth-child(3){border-top-color:#00A651}.stat:nth-child(4){border-top-color:#E53935}.stat small{color:#777;font-weight:600}.stat b{font-size:28px;display:block;margin:8px 0 4px}.stat span{font-size:12px;color:#888}
-.topbar{display:flex;gap:10px;overflow:auto;padding:12px 16px;scrollbar-width:none}.topbar::-webkit-scrollbar{display:none}.topbar span{background:#fff;padding:11px 18px;border-radius:999px;font-size:13px;font-weight:700;white-space:nowrap;box-shadow:0 4px 10px rgba(0,0,0,.06);border:1px solid #FFE082;cursor:pointer}.topbar span.on{background:linear-gradient(90deg,#D500A5,#FF6D00);color:#fff;border:none}
-.card{background:#fff;border-radius:22px;padding:22px 18px;margin:20px 16px;box-shadow:0 10px 24px rgba(0,0,0,.07);border:1px solid #FFF3C4}
-.card h3{margin:0 0 14px}input,select,textarea{width:100%;padding:13px 14px;border:1.5px solid #FFE082;border-radius:14px;margin:8px 0;font-size:14px;background:#FFFEF5;outline:none}button{width:100%;padding:14px;border:none;border-radius:14px;background:linear-gradient(90deg,#D500A5,#FF6D00);color:#fff;font-weight:800;font-size:15px;cursor:pointer;margin:6px 0}button.ghost{background:#fff;color:#D500A5;border:1.5px solid #D500A5}.lead{background:#fff;border-radius:18px;padding:16px;margin:14px 16px;box-shadow:0 6px 16px rgba(0,0,0,.06)}.lead b{font-size:16px}.pill{display:inline-block;padding:4px 10px;border-radius:999px;font-size:11px;font-weight:800;background:#FFF3C4;margin:4px 4px 0 0}.row{display:flex;gap:10px}.row>*{flex:1}.chk{display:flex;gap:8px;align-items:center;background:#FFFEF5;border:1px solid #FFE082;border-radius:12px;padding:10px 12px;margin:6px 0;font-size:13px;font-weight:600}.chk input{width:18px;height:18px;margin:0}
-.bottom{position:fixed;bottom:12px;left:12px;right:12px;background:#fff;border-radius:22px;display:flex;justify-content:space-around;padding:12px 6px;box-shadow:0 10px 30px rgba(0,0,0,.14);z-index:20}.bottom div{font-size:12px;font-weight:700;text-align:center;color:#888;cursor:pointer}.bottom div.on{color:#D500A5}
-#login{position:fixed;inset:0;background:#FFF8E1;z-index:100;padding:30px 20px;overflow:auto}
-</style></head><body>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kshitij Solar Operations</title>
+  <link rel="manifest" href="manifest.json">
+  <link rel="stylesheet" href="style.css">
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="min-h-screen flex flex-col bg-[#FFFDE7]">
 
-<div id="login"><div style="text-align:center"><img src="logo.jpg" style="width:92%;max-width:320px;border-radius:16px;background:#fff;padding:10px;box-shadow:0 8px 20px rgba(0,0,0,.08)"><h2>KSHITIJ SOLAR</h2><p style="color:#888">Solar Energy For Better Tomorrow • Since 2016</p></div>
-<div class="card"><h3>🔐 Team Login</h3><input id="uName" placeholder="Your Name *"><select id="uRole"><option value="Admin">Admin - Full Rights</option><option value="Team Head">Team Head - My + My Team</option><option value="Sales">Sales Executive - Only Mine</option></select><input id="uTeam" placeholder="Team Name - e.g. Lucknow Team"><input id="uPass" type="password" placeholder="Password - Admin: kshitij123"><button onclick="doLogin()">Login to App →</button><p style="font-size:12px;color:#888">Admin password: kshitij123 • Team Head / Sales: any password, Team Name must match.</p></div></div>
+  <!-- Top App Bar -->
+  <header class="bg-[#D32F2F] text-white shadow-lg sticky top-0 z-40 border-b-4 border-[#FFD54F]">
+    <div class="max-w-4xl mx-auto px-4 py-3 flex justify-between items-center">
+      <div class="flex items-center space-x-3">
+        <div class="bg-[#FFD54F] text-black font-black w-10 h-10 flex items-center justify-center rounded-xl shadow-inner text-xl">☀️</div>
+        <div>
+          <h1 class="text-base font-extrabold tracking-wider">KSHITIJ SOLAR</h1>
+          <p class="text-[10px] text-yellow-200 tracking-wide font-medium">Infrastructure & Housing | Lucknow</p>
+        </div>
+      </div>
+      <div class="flex items-center space-x-2">
+        <span id="role-badge" class="bg-[#FFD54F] text-black text-xs px-2.5 py-1 rounded-full font-bold shadow-sm">Role: ...</span>
+        <button onclick="openRoleModal()" class="bg-black/20 hover:bg-black/30 text-white px-2.5 py-1 rounded-lg text-xs font-semibold transition">Switch</button>
+      </div>
+    </div>
+  </header>
 
-<div class="header"><img src="logo.jpg" alt="KSHITIJ"><h1>KSHITIJ SOLAR</h1><p>☀️ Solar Energy For Better Tomorrow</p><div style="margin-top:10px;font-size:12px"><span id="who"></span> • <a href="#" onclick="logout()">Logout</a></div></div>
+  <!-- Navigation Bar -->
+  <nav class="bg-white shadow-sm border-b border-orange-100 sticky top-[65px] z-30">
+    <div class="max-w-4xl mx-auto flex overflow-x-auto space-x-1 px-2 py-1">
+      <button onclick="switchTab('leads')" class="tab-btn flex-1 py-2.5 px-3 font-bold text-xs md:text-sm border-b-2 border-[#D32F2F] text-[#D32F2F] whitespace-nowrap rounded-t-lg transition">📋 Leads</button>
+      <button onclick="switchTab('calculator')" class="tab-btn flex-1 py-2.5 px-3 font-semibold text-xs md:text-sm border-b-2 border-transparent text-gray-600 hover:text-[#D32F2F] whitespace-nowrap rounded-t-lg transition">⚡ Quote</button>
+      <button onclick="switchTab('upneda')" class="tab-btn flex-1 py-2.5 px-3 font-semibold text-xs md:text-sm border-b-2 border-transparent text-gray-600 hover:text-[#D32F2F] whitespace-nowrap rounded-t-lg transition">🏛️ UPNEDA</button>
+      <button onclick="switchTab('inventory')" class="tab-btn flex-1 py-2.5 px-3 font-semibold text-xs md:text-sm border-b-2 border-transparent text-gray-600 hover:text-[#D32F2F] whitespace-nowrap rounded-t-lg transition">📦 Stock</button>
+    </div>
+  </nav>
 
-<div class="followTop" id="followTop"></div>
+  <!-- Main Workspace -->
+  <main class="flex-grow max-w-4xl w-full mx-auto p-4 space-y-4">
 
-<div class="stats"><div class="stat"><small>Total Leads</small><b id="c1">0</b><span>Visible to you</span></div><div class="stat"><small>New Leads</small><b id="c2">0</b><span>Need follow-up</span></div><div class="stat"><small>Site Visit</small><b id="c3">0</b><span>Scheduled</span></div><div class="stat"><small>Installed</small><b id="c4">0</b><span>Completed</span></div></div>
+    <!-- TAB 1: LEADS & PIPELINE -->
+    <section id="leads-section" class="tab-content space-y-4">
+      <div class="bg-gradient-to-r from-red-50 to-orange-50 p-4 rounded-2xl shadow-sm border border-orange-200 flex justify-between items-center">
+        <div>
+          <h2 class="text-base font-extrabold text-[#D32F2F]">Customer Pipeline</h2>
+          <p class="text-xs text-gray-600">Active site visits and inquiry tracking</p>
+        </div>
+        <button onclick="openLeadModal()" class="bg-[#D32F2F] hover:bg-red-700 text-white font-bold py-2 px-4 rounded-xl text-xs md:text-sm shadow-md transition transform active:scale-95">+ Add Lead</button>
+      </div>
 
-<div class="topbar"><span class="on" onclick="filter('All',this)">All Leads</span><span onclick="filter('New',this)">New</span><span onclick="filter('Follow-up',this)">Follow-up</span><span onclick="filter('Site Visit',this)">Site Visit</span><span onclick="filter('Installed',this)">Installed</span></div>
+      <!-- Leads Container (Card Layout) -->
+      <div id="leads-container" class="space-y-3">
+        <!-- Dynamically rendered beautiful cards go here -->
+      </div>
+    </section>
 
-<div class="card"><h3>📥 Import / Export Excel</h3><p style="font-size:13px;color:#666">Columns: Name, Mobile, Village, PanelBrand, PanelWatt, SystemSize, InverterBrand, InverterType, Structure, Price, Subsidy, Advance, Status, Owner, Team, FollowupDate, Remark</p><input type="file" id="excelFile" accept=".xlsx,.xls,.csv"><button onclick="importExcel()">📥 Import Excel & Update All At Once</button><button class="ghost" onclick="exportExcel()">📤 Export Current Data to Excel</button><p id="impMsg" style="font-size:13px;color:green"></p></div>
+    <!-- TAB 2: QUICK QUOTATION CALCULATOR -->
+    <section id="calculator-section" class="tab-content hidden space-y-4">
+      <div class="bg-white p-6 rounded-2xl shadow-sm border border-orange-100 space-y-4">
+        <h2 class="text-base font-extrabold text-[#D32F2F]">Instant Solar Sizing & Cost Estimator</h2>
+        <div class="space-y-3">
+          <div>
+            <label class="block text-xs font-bold text-gray-700 mb-1">Average Monthly Electricity Bill (₹)</label>
+            <input type="number" id="calc-bill" placeholder="e.g. 4500" class="w-full p-3 bg-gray-50 border border-gray-200 rounded-xl text-sm focus:ring-2 focus:ring-[#D32F2F] outline-none">
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-gray-700 mb-1">Roof Shadow-Free Area (Sq. Ft.)</label>
+            <input type="number" id="calc-area" placeholder="e.g. 300" class="w-full p-3 bg-gray-50 border border-gray-200 rounded-xl text-sm focus:ring-2 focus:ring-[#D32F2F] outline-none">
+          </div>
+          <button onclick="calculateSolar()" class="w-full bg-[#F57C00] hover:bg-orange-700 text-white font-bold py-3 rounded-xl text-sm shadow-md transition">Calculate System & Subsidy</button>
+          
+          <div id="calc-results" class="hidden mt-4 p-4 bg-yellow-50 border border-yellow-200 rounded-xl space-y-2 text-sm shadow-inner">
+            <h3 class="font-bold text-gray-900 border-b border-yellow-200 pb-2">Estimated Proposal Summary</h3>
+            <p><strong>Recommended Capacity:</strong> <span id="res-kw" class="text-[#D32F2F] font-bold"></span> kW</p>
+            <p><strong>Estimated Gross Cost:</strong> ₹<span id="res-cost"></span></p>
+            <p><strong>Estimated Central Subsidy:</strong> ₹<span id="res-subsidy" class="text-green-700 font-bold"></span></p>
+            <p class="text-base pt-1 font-black text-[#D32F2F]">Net Customer Investment: ₹<span id="res-net"></span></p>
+          </div>
+        </div>
+      </div>
+    </section>
 
-<div class="card"><h3>➕ Add New Lead</h3>
-<div class="row"><input id="fName" placeholder="Customer Name *"><input id="fMobile" placeholder="Mobile *"></div>
-<input id="fVillage" placeholder="Village / City / Address">
-<div class="row"><select id="fInterest"><option>Rooftop Solar</option><option>Ground Mount</option><option>Commercial</option><option>Water Pump</option></select><select id="fStatus"><option>New</option><option>Contacted</option><option>Follow-up</option><option>Site Visit</option><option>Quotation</option><option>Installed</option><option>Lost</option></select></div>
-<h3 style="margin:16px 0 6px">☀️ Solar System Details</h3>
-<div class="row"><select id="fPanel"><option value="">Panel Brand</option><option>Waaree</option><option>Adani</option><option>Vikram Solar</option><option>Tata Power Solar</option><option>Goldi Solar</option><option>Saatvik</option><option>Other</option></select><select id="fWatt"><option value="">Panel Watt</option><option>540 Watt</option><option>545 Watt</option><option>550 Watt</option><option>580 Watt</option><option>600 Watt</option></select></div>
-<div class="row"><select id="fSize"><option value="">System Size</option><option>1 kW</option><option>2 kW</option><option>3 kW</option><option>5 kW</option><option>10 kW</option><option>15 kW</option><option>20 kW</option><option>50 kW</option><option>100 kW+</option></select><select id="fInv"><option value="">Inverter Brand</option><option>Growatt</option><option>Sungrow</option><option>GoodWe</option><option>Fronius</option><option>Havells</option><option>Polycab</option><option>Other</option></select></div>
-<div class="row"><select id="fInvType"><option>On-Grid</option><option>Off-Grid</option><option>Hybrid</option></select><select id="fStruct"><option>GI Structure</option><option>Aluminium</option><option>Elevated</option><option>Ground Mount</option><option>Shed / Tin Roof</option></select></div>
-<div class="row"><select id="fPhase"><option>Single Phase</option><option>Three Phase</option></select><select id="fBattery"><option>No Battery</option><option>Yes - Battery Needed</option></select></div>
-<h3 style="margin:16px 0 6px">💰 Price & Payment</h3>
-<div class="row"><input id="fPrice" type="number" placeholder="Quotation / Price ₹"><input id="fSubsidy" type="number" placeholder="Subsidy ₹"></div>
-<div class="row"><input id="fAdvance" type="number" placeholder="Advance Paid ₹"><select id="fPay"><option>Pending</option><option>Partial</option><option>Full Paid</option></select></div>
-<div class="row"><input id="fFollow" type="date"><input id="fInstall" type="date"></div>
-<input id="fPhoto" placeholder="Site Photo Link (Google Drive link)"><textarea id="fRemark" placeholder="Remark / Follow-up Note"></textarea>
-<h3 style="margin:14px 0 6px">📄 Documents For Subsidy</h3>
-<label class="chk"><input type="checkbox" id="dAadhaar"> Aadhaar Card Received</label>
-<label class="chk"><input type="checkbox" id="dBill"> Electricity Bill Received</label>
-<label class="chk"><input type="checkbox" id="dPass"> Bank Passbook / Cancelled Cheque</label>
-<label class="chk"><input type="checkbox" id="dPhoto"> Roof / Site Photo Received</label>
-<button onclick="addLead()">✅ Save Lead</button></div>
+    <!-- TAB 3: UPNEDA CHECKLIST -->
+    <section id="upneda-section" class="tab-content hidden space-y-4">
+      <div class="bg-white p-6 rounded-2xl shadow-sm border border-orange-100 space-y-3">
+        <h2 class="text-base font-extrabold text-[#D32F2F]">UPNEDA Subsidy Compliance Checklist</h2>
+        <p class="text-xs text-gray-500">Tap items to mark verification progress.</p>
+        
+        <div class="space-y-2">
+          <label class="flex items-center space-x-3 p-3 bg-gray-50 rounded-xl border border-gray-200 cursor-pointer hover:bg-orange-50 transition">
+            <input type="checkbox" class="w-5 h-5 text-[#D32F2F] rounded">
+            <span class="text-sm font-semibold text-gray-800">Aadhaar Card & Property Ownership Proof</span>
+          </label>
+          <label class="flex items-center space-x-3 p-3 bg-gray-50 rounded-xl border border-gray-200 cursor-pointer hover:bg-orange-50 transition">
+            <input type="checkbox" class="w-5 h-5 text-[#D32F2F] rounded">
+            <span class="text-sm font-semibold text-gray-800">Latest Electricity Bill (No Dues)</span>
+          </label>
+          <label class="flex items-center space-x-3 p-3 bg-gray-50 rounded-xl border border-gray-200 cursor-pointer hover:bg-orange-50 transition">
+            <input type="checkbox" class="w-5 h-5 text-[#D32F2F] rounded">
+            <span class="text-sm font-semibold text-gray-800">Geotagged Roof Photograph & Assessment</span>
+          </label>
+          <label class="flex items-center space-x-3 p-3 bg-gray-50 rounded-xl border border-gray-200 cursor-pointer hover:bg-orange-50 transition">
+            <input type="checkbox" class="w-5 h-5 text-[#D32F2F] rounded">
+            <span class="text-sm font-semibold text-gray-800">Net Metering Application Portal Filing</span>
+          </label>
+          <label class="flex items-center space-x-3 p-3 bg-gray-50 rounded-xl border border-gray-200 cursor-pointer hover:bg-orange-50 transition">
+            <input type="checkbox" class="w-5 h-5 text-[#D32F2F] rounded">
+            <span class="text-sm font-semibold text-gray-800">Joint Inspection & Commissioning Report</span>
+          </label>
+        </div>
+      </div>
+    </section>
 
-<div class="card"><h3>🔍 Search Leads</h3><input id="search" placeholder="Search by Name / Mobile / Village" oninput="render()"></div>
-<div id="list"></div>
-<div class="bottom"><div class="on">🏠<br>Home</div><div onclick="document.getElementById('search').focus()">🔍<br>Search</div><div onclick="window.scrollTo({top:0,behavior:'smooth'})">➕<br>Add</div><div onclick="exportExcel()">📤<br>Excel</div></div>
+    <!-- TAB 4: INVENTORY STOCK LOG -->
+    <section id="inventory-section" class="tab-content hidden space-y-4">
+      <div class="bg-white rounded-2xl shadow-sm border border-orange-100 overflow-hidden p-5 space-y-3">
+        <div class="flex justify-between items-center border-b pb-2">
+          <h3 class="font-extrabold text-[#D32F2F]">Warehouse Stock</h3>
+          <span class="text-xs bg-purple-100 text-[#8E24AA] font-bold px-2.5 py-1 rounded-full">Lucknow Godown</span>
+        </div>
+        <div class="space-y-2">
+          <div class="p-3 bg-gray-50 rounded-xl border flex justify-between items-center">
+            <div><strong>Solar Panels (550W)</strong><p class="text-xs text-gray-500">Mono PERC Half-Cut</p></div>
+            <span class="bg-green-100 text-green-800 font-bold text-xs px-2.5 py-1 rounded-lg">140 Units</span>
+          </div>
+          <div class="p-3 bg-gray-50 rounded-xl border flex justify-between items-center">
+            <div><strong>Grid-Tie Inverter (5kW)</strong><p class="text-xs text-gray-500">Single Phase</p></div>
+            <span class="bg-orange-100 text-[#F57C00] font-bold text-xs px-2.5 py-1 rounded-lg">12 Units (Low)</span>
+          </div>
+          <div class="p-3 bg-gray-50 rounded-xl border flex justify-between items-center">
+            <div><strong>Mounting Structures</strong><p class="text-xs text-gray-500">HDG Elevated Racks</p></div>
+            <span class="bg-green-100 text-green-800 font-bold text-xs px-2.5 py-1 rounded-lg">45 Sets</span>
+          </div>
+        </div>
+      </div>
+    </section>
 
-<script>
-let leads=JSON.parse(localStorage.getItem('k_leads')||'[]');let curFilter='All';
-let user=JSON.parse(localStorage.getItem('k_user')||'null');
-if(user){document.getElementById('login').style.display='none';document.getElementById('who').innerText=user.name+' • '+user.role+' • '+user.team;}
-function doLogin(){let n=document.getElementById('uName').value.trim(),r=document.getElementById('uRole').value,t=document.getElementById('uTeam').value.trim(),p=document.getElementById('uPass').value;if(!n||!t)return alert('Enter Name & Team Name');if(r=='Admin'&&p!=='kshitij123')return alert('Wrong Admin Password');user={name:n,role:r,team:t};localStorage.setItem('k_user',JSON.stringify(user));location.reload();}
-function logout(){localStorage.removeItem('k_user');location.reload();}
-function visible(l){if(!user)return false;if(user.role=='Admin')return true;if(user.role=='Team Head')return l.team==user.team;return l.owner==user.name;}
-function save(){localStorage.setItem('k_leads',JSON.stringify(leads));render();}
-function addLead(){let m=document.getElementById('fMobile').value.trim(),n=document.getElementById('fName').value.trim();if(!n||!m)return alert('Name & Mobile required');let price=+document.getElementById('fPrice').value||0,adv=+document.getElementById('fAdvance').value||0;let obj={name:n,mobile:m,village:document.getElementById('fVillage').value,interest:document.getElementById('fInterest').value,status:document.getElementById('fStatus').value,panel:document.getElementById('fPanel').value,watt:document.getElementById('fWatt').value,size:document.getElementById('fSize').value,inverter:document.getElementById('fInv').value,invType:document.getElementById('fInvType').value,struct:document.getElementById('fStruct').value,phase:document.getElementById('fPhase').value,battery:document.getElementById('fBattery').value,price:price,subsidy:+document.getElementById('fSubsidy').value||0,advance:adv,balance:price-adv,pay:document.getElementById('fPay').value,follow:document.getElementById('fFollow').value,install:document.getElementById('fInstall').value,photo:document.getElementById('fPhoto').value,remark:document.getElementById('fRemark').value,docs:{aadhaar:document.getElementById('dAadhaar').checked,bill:document.getElementById('dBill').checked,pass:document.getElementById('dPass').checked,photoDoc:document.getElementById('dPhoto').checked},owner:user.name,team:user.team};let ex=leads.findIndex(x=>x.mobile==m);if(ex>=0)leads[ex]={...leads[ex],...obj};else leads.unshift(obj);save();alert('Lead Saved!');}
-function filter(s,el){curFilter=s;document.querySelectorAll('.topbar span').forEach(x=>x.classList.remove('on'));el.classList.add('on');render();}
-function del(i){if(user.role!=='Admin'&&user.role!=='Team Head')return alert('Only Admin / Team Head can delete');if(confirm('Delete this lead?')){leads.splice(i,1);save();}}
-function toggleDoc(i,key){leads[i].docs=leads[i].docs||{};leads[i].docs[key]=!leads[i].docs[key];save();}
-function makeQuote(i){let l=leads[i];let {jsPDF}=window.jspdf;let d=new jsPDF();d.setFontSize(20);d.setTextColor(213,0,165);d.text("KSHITIJ SOLAR",20,20);d.setFontSize(11);d.setTextColor(0,0,0);d.text("Infrastructure & Housing | Since 2016 | Lucknow",20,28);d.text("Solar Energy For Better Tomorrow",20,34);d.line(20,38,190,38);d.setFontSize(14);d.text("QUOTATION",20,48);d.setFontSize(12);d.text("Customer: "+(l.name||''),20,60);d.text("Mobile: "+(l.mobile||''),20,68);d.text("Village / City: "+(l.village||''),20,76);d.text("System Size: "+(l.size||''),20,88);d.text("Panel: "+(l.panel||'')+" "+(l.watt||''),20,96);d.text("Inverter: "+(l.inverter||'')+" "+(l.invType||''),20,104);d.text("Structure: "+(l.struct||''),20,112);d.setFontSize(13);d.text("Total Price: Rs. "+(l.price||0),20,126);d.text("Subsidy: Rs. "+(l.subsidy||0),20,134);d.text("Advance Paid: Rs. "+(l.advance||0),20,142);d.text("Balance: Rs. "+(l.balance||0),20,150);d.setFontSize(10);d.setTextColor(100,100,100);d.text("This quotation is valid for 7 days. Subsidy as per MNRE guidelines.",20,168);d.text("Thank you for choosing KSHITIJ SOLAR, Lucknow.",20,176);d.save("Quotation-"+l.name+".pdf");}
-function render(){let q=(document.getElementById('search').value||'').toLowerCase();let vis=leads.filter(visible);document.getElementById('c1').innerText=vis.length;document.getElementById('c2').innerText=vis.filter(x=>x.status=='New').length;document.getElementById('c3').innerText=vis.filter(x=>x.status=='Site Visit').length;document.getElementById('c4').innerText=vis.filter(x=>x.status=='Installed').length;let today=new Date().toISOString().slice(0,10);let todays=vis.filter(x=>x.follow==today);document.getElementById('followTop').innerHTML=todays.length?`<b>📞 Today's Follow-up: ${todays.length} leads</b><br><span style="font-size:13px;color:#555">${todays.map(x=>x.name+' ('+x.mobile+')').join(' • ')}</span><br><span style="font-size:12px;color:#D500A5;font-weight:700">Call them today — don't miss!</span>`:`<b>📞 Today's Follow-up: 0 leads</b><br><span style="font-size:13px;color:#555">No follow-up today. Add follow-up date in lead form.</span>`;let html='';vis.forEach(l=>{if(curFilter!=='All'&&l.status!==curFilter)return;if(q&&!(l.name+l.mobile+l.village).toLowerCase().includes(q))return;let realIdx=leads.indexOf(l);let docs=l.docs||{};html+=`<div class="lead"><b>${l.name}</b> <span class="pill">${l.status}</span><span class="pill">${l.size||''} ${l.panel||''}</span><br><span style="color:#666">📞 ${l.mobile} • 📍 ${l.village||''}</span><br><span style="font-size:13px">☀️ ${l.panel||'-'} ${l.watt||''} • Inverter: ${l.inverter||'-'} ${l.invType||''} • ${l.struct||''}</span><br><span style="font-size:13px">💰 Price ₹${l.price||0} • Adv ₹${l.advance||0} • Bal ₹${l.balance||0} • ${l.pay||''} • Subsidy ₹${l.subsidy||0}</span><br><span style="font-size:13px">👤 ${l.owner||''} • Team: ${l.team||''} • Follow: ${l.follow||'-'} • Install: ${l.install||'-'}</span><br><span style="font-size:13px">📝 ${l.remark||''}</span><div style="margin-top:10px;background:#FFFEF5;border:1px solid #FFE082;border-radius:12px;padding:10px"><b style="font-size:13px">📄 Documents</b><br><label style="font-size:13px"><input type="checkbox" ${docs.aadhaar?'checked':''} onchange="toggleDoc(${realIdx},'aadhaar')"> Aadhaar</label> &nbsp; <label style="font-size:13px"><input type="checkbox" ${docs.bill?'checked':''} onchange="toggleDoc(${realIdx},'bill')"> Bill</label> &nbsp; <label style="font-size:13px"><input type="checkbox" ${docs.pass?'checked':''} onchange="toggleDoc(${realIdx},'pass')"> Passbook</label> &nbsp; <label style="font-size:13px"><input type="checkbox" ${docs.photoDoc?'checked':''} onchange="toggleDoc(${realIdx},'photoDoc')"> Photo</label></div><div class="row" style="margin-top:10px"><a href="tel:${l.mobile}" style="flex:1;text-align:center;background:#00A651;color:#fff;padding:10px;border-radius:12px;text-decoration:none">📞 Call</a><a href="https://wa.me/91${l.mobile}" target="_blank" style="flex:1;text-align:center;background:#25D366;color:#fff;padding:10px;border-radius:12px;text-decoration:none">💬 WhatsApp</a><button style="flex:1;background:#fff;color:#E53935;border:1.5px solid #E53935" onclick="del(${realIdx})">Delete</button></div><button class="ghost" onclick="makeQuote(${realIdx})">📄 Download Quotation PDF</button></div>`});document.getElementById('list').innerHTML=html||'<p style="text-align:center;color:#888">No leads found for you</p>';}
-function importExcel(){let f=document.getElementById('excelFile').files[0];if(!f)return alert('Select Excel file first');let r=new FileReader();r.onload=e=>{let wb=XLSX.read(e.target.result,{type:'array'});let rows=XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]]);let cnt=0;rows.forEach(row=>{let mob=String(row.Mobile||row.mobile||'').trim();if(!mob)return;let price=+row.Price||0,adv=+row.Advance||0;let obj={name:row.Name||row.name||'',mobile:mob,village:row.Village||'',interest:row.Interest||'Rooftop Solar',status:row.Status||'New',panel:row.PanelBrand||'',watt:row.PanelWatt||'',size:row.SystemSize||'',inverter:row.InverterBrand||'',invType:row.InverterType||'On-Grid',struct:row.Structure||'',phase:row.Phase||'Single Phase',battery:row.Battery||'No Battery',price:price,subsidy:+row.Subsidy||0,advance:adv,balance:price-adv,pay:row.PaymentStatus||'Pending',follow:row.FollowupDate||'',install:row.InstallDate||'',photo:row.Photo||'',remark:row.Remark||'',owner:row.Owner||user.name,team:row.Team||user.team};let ex=leads.findIndex(x=>x.mobile==mob);if(ex>=0)leads[ex]={...leads[ex],...obj};else leads.unshift(obj);cnt++;});save();document.getElementById('impMsg').innerText='✅ Imported / Updated '+cnt+' leads successfully!';};r.readAsArrayBuffer(f);}
-function exportExcel(){let vis=leads.filter(visible);let ws=XLSX.utils.json_to_sheet(vis);let wb=XLSX.utils.book_new();XLSX.utils.book_append_sheet(wb,ws,'Leads');XLSX.writeFile(wb,'Kshitij-Solar-Leads.xlsx');}
-render();
-</script></body></html>
+  </main>
+
+  <!-- ADD / EDIT LEAD MODAL -->
+  <div id="lead-modal" class="fixed inset-0 bg-black/60 backdrop-blur-sm hidden flex items-center justify-center p-4 z-50">
+    <div class="bg-white rounded-2xl shadow-2xl max-w-md w-full p-6 space-y-4 border-t-4 border-[#D32F2F]">
+      <div class="flex justify-between items-center border-b pb-3">
+        <h3 id="modal-title" class="font-extrabold text-[#D32F2F] text-lg">Add Customer Inquiry</h3>
+        <button onclick="closeLeadModal()" class="text-gray-400 hover:text-black font-bold text-lg">✕</button>
+      </div>
+      <form id="lead-form" class="space-y-3">
+        <input type="hidden" id="lead-index">
+        <div>
+          <label class="block text-xs font-bold text-gray-700 mb-1">Customer Name</label>
+          <input type="text" id="modal-name" required class="w-full p-3 bg-gray-50 border rounded-xl text-sm outline-none focus:ring-2 focus:ring-[#D32F2F]">
+        </div>
+        <div>
+          <label class="block text-xs font-bold text-gray-700 mb-1">Phone Number</label>
+          <input type="tel" id="modal-phone" required class="w-full p-3 bg-gray-50 border rounded-xl text-sm outline-none focus:ring-2 focus:ring-[#D32F2F]">
+        </div>
+        <div>
+          <label class="block text-xs font-bold text-gray-700 mb-1">Locality (e.g. Jankipuram)</label>
+          <input type="text" id="modal-location" required class="w-full p-3 bg-gray-50 border rounded-xl text-sm outline-none focus:ring-2 focus:ring-[#D32F2F]">
+        </div>
+        <div class="grid grid-cols-2 gap-2">
+          <div>
+            <label class="block text-xs font-bold text-gray-700 mb-1">System Type</label>
+            <select id="modal-type" class="w-full p-3 bg-gray-50 border rounded-xl text-sm outline-none">
+              <option value="Rooftop">Rooftop</option>
+              <option value="Commercial">Commercial</option>
+              <option value="Pump">Solar Pump</option>
+              <option value="StreetLight">Street Light</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-gray-700 mb-1">Status</label>
+            <select id="modal-status" class="w-full p-3 bg-gray-50 border rounded-xl text-sm outline-none">
+              <option value="New Lead">New Lead</option>
+              <option value="Survey Scheduled">Survey Scheduled</option>
+              <option value="Proposal Sent">Proposal Sent</option>
+              <option value="UPNEDA Pending">UPNEDA Pending</option>
+              <option value="Completed">Completed</option>
+            </select>
+          </div>
+        </div>
+        <div>
+          <label class="block text-xs font-bold text-gray-700 mb-1">Site Survey Photo (Camera)</label>
+          <input type="file" id="modal-photo" accept="image/*" class="w-full p-2 bg-gray-50 border rounded-xl text-xs">
+          <div id="photo-preview-container" class="mt-2 hidden">
+            <span class="text-[10px] text-gray-500 font-bold">Attached Photo:</span>
+            <img id="photo-preview" class="w-16 h-16 object-cover rounded-xl border mt-1 shadow-sm">
+          </div>
+        </div>
+        <div class="flex space-x-2 pt-2">
+          <button type="button" onclick="closeLeadModal()" class="w-1/2 bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-3 rounded-xl text-sm transition">Cancel</button>
+          <button type="submit" class="w-1/2 bg-[#D32F2F] hover:bg-red-700 text-white font-bold py-3 rounded-xl text-sm shadow-md transition">Save Lead</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ROLE MODAL -->
+  <div id="role-modal" class="fixed inset-0 bg-black/70 backdrop-blur-sm hidden flex items-center justify-center p-4 z-50">
+    <div class="bg-white rounded-2xl shadow-2xl max-w-xs w-full p-6 text-center space-y-4 border-t-4 border-[#FFD54F]">
+      <h3 class="text-base font-extrabold text-[#D32F2F]">Select App Role</h3>
+      <p class="text-xs text-gray-500">Configure your permissions for this phone.</p>
+      <div class="space-y-2.5">
+        <button onclick="setRole('Admin')" class="w-full bg-[#D32F2F] text-white font-bold py-3 rounded-xl text-xs shadow-md hover:bg-red-700 transition">👑 Partner / Admin</button>
+        <button onclick="setRole('Office')" class="w-full bg-[#F57C00] text-white font-bold py-3 rounded-xl text-xs shadow-md hover:bg-orange-700 transition">💼 Office / Sales Team</button>
+        <button onclick="setRole('Field')" class="w-full bg-[#8E24AA] text-white font-bold py-3 rounded-xl text-xs shadow-md hover:bg-purple-800 transition">🛠️ Field Installation</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- LIGHTBOX -->
+  <div id="lightbox-modal" class="fixed inset-0 bg-black/90 hidden flex items-center justify-center p-4 z-50" onclick="closeLightbox()">
+    <img id="lightbox-img" class="max-w-full max-h-[85vh] rounded-2xl shadow-2xl border-2 border-white/20">
+  </div>
+
+  <footer class="bg-gray-900 text-white text-center py-4 text-xs mt-auto">
+    <p class="text-gray-400">Kshitij Solar Operations • Jankipuram, Lucknow</p>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>
