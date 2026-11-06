@@ -1,37 +1,78 @@
 <!DOCTYPE html>
-<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>KSHITIJ SOLAR - Lucknow</title><link rel="manifest" href="manifest.json"><link rel="stylesheet" href="style.css">
+<html lang="en"><head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>KSHITIJ SOLAR - Lucknow</title>
+<link rel="manifest" href="manifest.json">
+<link rel="stylesheet" href="style.css">
 <script src="https://cdn.sheetjs.com/xlsx-0.20.2/package/dist/xlsx.full.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script></head><body>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+</head><body>
 
+<!-- LOGIN -->
 <div id="loginPage">
-<div style="text-align:center;padding:28px 16px"><img src="logo.jpg" style="width:84px;height:84px;object-fit:contain;background:#fff;border-radius:18px;padding:8px;box-shadow:0 6px 18px rgba(0,0,0,.12)"><h2 style="margin:12px 0 4px">KSHITIJ SOLAR</h2><p style="color:#666;margin:0;font-size:13px">Infrastructure & Housing | Lucknow</p><p style="color:#D500A5;font-weight:700;font-size:13px">Solar Energy For Better Tomorrow</p></div>
-<div class="card"><h3>Welcome Back</h3><div class="row"><button id="btnAdmin" onclick="pickRole('Admin')">👑 Admin</button><button id="btnTeam" class="ghost" onclick="pickRole('Team')">👥 Team</button></div>
-<input id="uName" placeholder="Your Name *"><input id="uTeam" placeholder="Team Name - e.g. Lucknow Team"><input id="uPass" type="password" placeholder="Admin Password - kshitij123"><select id="uRole"><option value="Admin">Admin - Full Rights</option><option value="Team Head">Team Head</option><option value="Sales">Sales Executive</option></select>
-<button onclick="doLogin()">Login to App →</button><p style="font-size:12px;color:#888">Admin: Use password kshitij123 • Team: Any password, Team Name must match.</p></div>
+<div style="text-align:center;padding:24px 16px 8px">
+<img src="logo.jpg" style="width:72px;height:72px;object-fit:contain;background:#fff;border-radius:16px;padding:6px;box-shadow:0 6px 18px rgba(0,0,0,.12)">
+<h2 style="margin:10px 0 2px;font-size:22px">KSHITIJ SOLAR</h2>
+<p style="color:#666;margin:0;font-size:13px">Infrastructure & Housing | Lucknow</p>
+<p style="color:#D500A5;font-weight:700;font-size:12px;margin:6px 0 0">Solar Energy For Better Tomorrow</p>
+</div>
+<div class="card">
+<h3 style="text-align:center">Choose Your Role</h3>
+<button id="btnAdmin" onclick="pickRole('Admin')">👑 &nbsp; ADMIN &nbsp; <span style="font-weight:400;font-size:12px;opacity:.8">- Full Control</span></button>
+<button id="btnOffice" class="ghost" onclick="pickRole('Office')">🏢 &nbsp; OFFICE &nbsp; <span style="font-weight:400;font-size:12px;opacity:.8">- Office Staff</span></button>
+<button id="btnTeam" class="ghost" onclick="pickRole('Team')">👥 &nbsp; TEAM &nbsp; <span style="font-weight:400;font-size:12px;opacity:.8">- Field Team</span></button>
+<div id="adminOnly" style="display:block"><input id="uPass" type="password" placeholder="Enter Admin Password"></div>
+<div id="officeOnly" style="display:none"><input id="uOfficePass" type="password" placeholder="Enter Office Password"></div>
+<div id="teamOnly" style="display:none"><input id="uTeam" placeholder="Team Name - e.g. Lucknow Team"><select id="uRole"><option value="Team Head">Team Head</option><option value="Sales">Sales Executive</option></select></div>
+<button onclick="doLogin()">Login to App →</button>
+<p style="font-size:12px;color:#888;text-align:center;margin:8px 0 0">Tap your role above to login</p>
+</div>
 </div>
 
+<!-- TOP BAR -->
 <header class="topbar-red">
-<img src="logo.jpg" class="topLogo"><div class="topTitle"><b>KSHITIJ SOLAR</b><span>Infrastructure & Housing | Lucknow</span></div>
+<img src="logo.jpg" class="topLogo">
+<div class="topTitle"><b>KSHITIJ SOLAR</b><span>Infrastructure & Housing | Lucknow</span></div>
 <div class="topRight"><span id="modeLabel" class="modeBtn">Field</span><button class="switchBtn" onclick="openSwitch()">Switch</button></div>
 </header>
 
+<!-- SWITCH POPUP -->
 <div id="switchPopup" class="popup" style="display:none"><div class="popupBox"><h3>Switch View To</h3>
 <button onclick="setMode('Field')">👷 Field Team View — Only My Leads</button>
 <button class="ghost" onclick="setMode('Office')">🏢 Office / Admin View — All + Excel + Masters</button>
 <button class="ghost" onclick="setMode('Team')">👥 Team View — Lucknow Team Only</button>
-<button class="ghost" onclick="closeSwitch()">Cancel</button></div></div>
+<button class="ghost" onclick="closeSwitch()">Cancel</button>
+<button class="ghost" onclick="logout()" style="color:#E53935;border-color:#E53935">🚪 Logout</button>
+</div></div>
 
+<!-- HOME -->
 <div class="followTop" id="followTop"></div>
-<div class="stats"><div class="stat"><small>Total Leads</small><b id="c1">0</b><span>Visible to you</span></div><div class="stat"><small>New Leads</small><b id="c2">0</b><span>Need follow-up</span></div><div class="stat"><small>Site Visit</small><b id="c3">0</b><span>Scheduled</span></div><div class="stat"><small>Installed</small><b id="c4">0</b><span>Completed</span></div></div>
+<div class="stats">
+<div class="stat"><small>Total Leads</small><b id="c1">0</b><span>Visible to you</span></div>
+<div class="stat"><small>New Leads</small><b id="c2">0</b><span>Need follow-up</span></div>
+<div class="stat"><small>Site Visit</small><b id="c3">0</b><span>Scheduled</span></div>
+<div class="stat"><small>Installed</small><b id="c4">0</b><span>Completed</span></div>
+</div>
 
-<div class="card" id="masterCard"><h3>⚙️ Master Settings <span style="font-size:12px;color:#888">(Admin Only)</span></h3><p style="font-size:13px;color:#666">Add / Edit / Delete Panel, Inverter, Structure, Documents here. It will appear in Add Lead dropdown for all.</p>
+<div class="card" id="masterCard">
+<h3>⚙️ Master Settings <span style="font-size:12px;color:#888">(Admin Only)</span></h3>
+<p style="font-size:13px;color:#666">Add / Edit / Delete Panel, Inverter, Structure, Documents. It will appear in Add Lead dropdown for all.</p>
 <select id="masterType"><option value="panels">Panel Brands</option><option value="inverters">Inverter Brands</option><option value="structures">Structure Types</option><option value="docs">Document Types</option></select>
-<input id="masterVal" placeholder="Type new value e.g. UTL, Livguard, PAN Card"><div class="row"><button onclick="addMaster()">➕ Add to Master</button><button class="ghost" onclick="delMaster()">🗑️ Delete Selected</button></div><div id="masterList" style="font-size:13px;margin-top:8px"></div></div>
+<input id="masterVal" placeholder="Type new value e.g. UTL, Livguard, PAN Card">
+<div class="row"><button onclick="addMaster()">➕ Add to Master</button><button class="ghost" onclick="delMaster()">🗑️ Delete Selected</button></div>
+<div id="masterList" style="font-size:13px;margin-top:8px"></div>
+</div>
 
-<div class="card" id="excelCard"><h3>📥 Import / Export Excel</h3><input type="file" id="excelFile" accept=".xlsx,.xls,.csv"><button onclick="importExcel()">📥 Import Excel & Update All</button><button class="ghost" onclick="exportExcel()">📤 Export to Excel</button><p id="impMsg" style="font-size:13px;color:green"></p></div>
+<div class="card" id="excelCard">
+<h3>📥 Import / Export Excel</h3>
+<input type="file" id="excelFile" accept=".xlsx,.xls,.csv">
+<button onclick="importExcel()">📥 Import Excel & Update All</button>
+<button class="ghost" onclick="exportExcel()">📤 Export to Excel</button>
+<p id="impMsg" style="font-size:13px;color:green"></p>
+</div>
 
-<div class="card"><h3>➕ Add New Lead</h3>
+<div class="card">
+<h3>➕ Add New Lead</h3>
 <div class="row"><input id="fName" placeholder="Customer Name *"><input id="fMobile" placeholder="Mobile *"></div>
 <input id="fVillage" placeholder="Village / City / Address">
 <div class="row"><select id="fInterest"><option>Rooftop Solar</option><option>Ground Mount</option><option>Commercial</option><option>Water Pump</option></select><select id="fStatus"><option>New</option><option>Contacted</option><option>Follow-up</option><option>Site Visit</option><option>Quotation</option><option>Installed</option><option>Lost</option></select></div>
@@ -45,9 +86,12 @@
 <div class="row"><input id="fFollow" type="date"><input id="fInstall" type="date"></div>
 <textarea id="fRemark" placeholder="Remark / Follow-up Note"></textarea>
 <h3 style="margin:12px 0 6px">📄 Documents For Subsidy</h3><div id="docChecks"></div>
-<button onclick="addLead()">✅ Save Lead</button></div>
+<button onclick="addLead()">✅ Save Lead</button>
+</div>
 
 <div class="card"><h3>🔍 Search Leads</h3><input id="search" placeholder="Search by Name / Mobile / Village" oninput="render()"></div>
 <div id="list"></div>
+
 <div class="bottom"><div class="on">🏠<br>Home</div><div onclick="document.getElementById('search').focus()">🔍<br>Search</div><div onclick="window.scrollTo({top:0,behavior:'smooth'})">➕<br>Add</div><div onclick="exportExcel()">📤<br>Excel</div></div>
-<script src="app.js"></script></body></html>
+<script src="app.js"></script>
+</body></html>
