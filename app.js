@@ -1,214 +1,26 @@
-let userRole = localStorage.getItem('kshitij_role') || '';
-
-window.addEventListener('DOMContentLoaded', () => {
-  if (!userRole) {
-    document.getElementById('role-modal').classList.remove('hidden');
-  } else {
-    updateRoleUI();
-  }
-  renderLeads();
-});
-
-function setRole(role) {
-  userRole = role;
-  localStorage.setItem('kshitij_role', role);
-  document.getElementById('role-modal').classList.add('hidden');
-  updateRoleUI();
-  renderLeads();
-}
-
-function openRoleModal() {
-  document.getElementById('role-modal').classList.remove('hidden');
-}
-
-function updateRoleUI() {
-  document.getElementById('role-badge').innerText = userRole;
-}
-
-function switchTab(tabName) {
-  document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
-  document.querySelectorAll('.tab-btn').forEach(el => {
-    el.classList.remove('border-[#D32F2F]', 'text-[#D32F2F]', 'bg-red-50');
-    el.classList.add('border-transparent', 'text-gray-600');
-  });
-
-  document.getElementById(`${tabName}-section`).classList.remove('hidden');
-  const activeBtn = document.querySelector(`[data-target="${tabName}-section"]`);
-  if (activeBtn) {
-    activeBtn.classList.remove('border-transparent', 'text-gray-600');
-    activeBtn.classList.add('border-[#D32F2F]', 'text-[#D32F2F]', 'bg-red-50');
-  }
-}
-
-let leads = JSON.parse(localStorage.getItem('kshitij_leads')) || [
-  { name: "Ramesh Sharma", phone: "9839011223", location: "Jankipuram Ext", type: "Rooftop", status: "Survey Scheduled", photo: "" },
-  { name: "Anil Verma", phone: "9415022334", location: "Gomti Nagar", type: "Commercial", status: "Proposal Sent", photo: "" }
-];
-
-function saveLeads() {
-  localStorage.setItem('kshitij_leads', JSON.stringify(leads));
-  renderLeads();
-}
-
-function renderLeads() {
-  const container = document.getElementById('leads-container');
-  container.innerHTML = '';
-
-  if (leads.length === 0) {
-    container.innerHTML = `<div class="text-center p-8 bg-white rounded-2xl shadow-sm text-gray-400 text-xs">No inquiries recorded yet. Tap "+ Add Lead" to start.</div>`;
-    return;
-  }
-
-  leads.forEach((lead, index) => {
-    let statusBg = 'bg-orange-100 text-orange-800';
-    if(lead.status === 'Completed') statusBg = 'bg-green-100 text-green-800';
-    if(lead.status === 'Survey Scheduled') statusBg = 'bg-purple-100 text-purple-800';
-    if(lead.status === 'Proposal Sent') statusBg = 'bg-blue-100 text-blue-800';
-
-    let photoThumb = lead.photo 
-      ? `<img src="${lead.photo}" class="w-12 h-12 object-cover rounded-xl cursor-pointer border shadow-sm hover:opacity-90 transition" onclick="openLightbox('${lead.photo}')">` 
-      : `<div class="w-12 h-12 bg-gray-100 rounded-xl flex items-center justify-center text-[10px] text-gray-400 italic border">No photo</div>`;
-
-    let deleteBtn = userRole === 'Admin' 
-      ? `<button onclick="deleteLead(${index})" class="bg-red-50 text-red-600 px-3 py-1.5 rounded-lg text-xs font-bold hover:bg-red-100 transition">Delete</button>` 
-      : `<span class="text-gray-300 text-xs" title="Admin only">🔒 Admin Locked</span>`;
-
-    container.innerHTML += `
-      <div class="bg-white p-4 rounded-2xl shadow-sm border border-orange-100 flex flex-col space-y-3 hover:shadow-md transition">
-        <div class="flex justify-between items-start">
-          <div class="flex items-center space-x-3">
-            ${photoThumb}
-            <div>
-              <h4 class="font-extrabold text-gray-900 text-sm">${lead.name}</h4>
-              <p class="text-xs text-gray-500">📞 ${lead.phone} • 📍 ${lead.location}</p>
-            </div>
-          </div>
-          <span class="text-[10px] px-2.5 py-1 rounded-full font-extrabold ${statusBg}">${lead.status}</span>
-        </div>
-        <div class="flex justify-between items-center pt-2 border-t border-gray-100 text-xs">
-          <span class="font-bold text-gray-600 bg-gray-50 px-2 py-1 rounded-md">Type: ${lead.type}</span>
-          <div class="space-x-2 flex items-center">
-            <a href="tel:${lead.phone}" class="bg-blue-50 text-blue-600 px-3 py-1.5 rounded-lg font-bold hover:bg-blue-100 transition">Call</a>
-            <button onclick="openLeadModal(${index})" class="bg-orange-50 text-[#F57C00] px-3 py-1.5 rounded-lg font-bold hover:bg-orange-100 transition">Edit</button>
-            ${deleteBtn}
-          </div>
-        </div>
-      </div>
-    `;
-  });
-}
-
-function openLeadModal(index = null) {
-  document.getElementById('lead-modal').classList.remove('hidden');
-  document.getElementById('photo-preview-container').classList.add('hidden');
-  document.getElementById('modal-photo').value = '';
-
-  if (index !== null) {
-    document.getElementById('modal-title').innerText = 'Edit Customer Inquiry';
-    document.getElementById('lead-index').value = index;
-    document.getElementById('modal-name').value = leads[index].name;
-    document.getElementById('modal-phone').value = leads[index].phone;
-    document.getElementById('modal-location').value = leads[index].location;
-    document.getElementById('modal-type').value = leads[index].type;
-    document.getElementById('modal-status').value = leads[index].status;
-    
-    if (leads[index].photo) {
-      document.getElementById('photo-preview').src = leads[index].photo;
-      document.getElementById('photo-preview-container').classList.remove('hidden');
-    }
-  } else {
-    document.getElementById('modal-title').innerText = 'Add New Customer Inquiry';
-    document.getElementById('lead-form').reset();
-    document.getElementById('lead-index').value = '';
-  }
-}
-
-function closeLeadModal() {
-  document.getElementById('lead-modal').classList.add('hidden');
-}
-
-// Handle Form Submit with Image Compression & Base64 Conversion
-document.getElementById('lead-form').addEventListener('submit', function(e) {
-  e.preventDefault();
-  const index = document.getElementById('lead-index').value;
-  const name = document.getElementById('modal-name').value;
-  const phone = document.getElementById('modal-phone').value;
-  const location = document.getElementById('modal-location').value;
-  const type = document.getElementById('modal-type').value;
-  const status = document.getElementById('modal-status').value;
-  const photoFile = document.getElementById('modal-photo').files[0];
-
-  const processLeadData = (photoBase64) => {
-    const leadData = {
-      name, phone, location, type, status,
-      photo: photoBase64 || (index !== '' && leads[index] ? leads[index].photo : '')
-    };
-
-    if (index !== '' && index >= 0) {
-      leads[index] = leadData;
-    } else {
-      leads.unshift(leadData);
-    }
-    saveLeads();
-    closeLeadModal();
-  };
-
-  if (photoFile) {
-    const reader = new FileReader();
-    reader.onload = function(event) {
-      const img = new Image();
-      img.onload = function() {
-        const canvas = document.createElement('canvas');
-        const ctx = canvas.getContext('2d');
-        const MAX_WIDTH = 500;
-        let width = img.width;
-        let height = img.height;
-        if (width > MAX_WIDTH) { height *= MAX_WIDTH / width; width = MAX_WIDTH; }
-        canvas.width = width;
-        canvas.height = height;
-        ctx.drawImage(img, 0, 0, width, height);
-        processLeadData(canvas.toDataURL('image/jpeg', 0.7));
-      };
-      img.src = event.target.result;
-    };
-    reader.readAsDataURL(photoFile);
-  } else {
-    processLeadData(null);
-  }
-});
-
-function deleteLead(index) {
-  if (userRole !== 'Admin') {
-    alert('Access Denied: Only Partners/Admins can delete records.');
-    return;
-  }
-  if (confirm('Delete this inquiry record?')) {
-    leads.splice(index, 1);
-    saveLeads();
-  }
-}
-
-function openLightbox(src) {
-  document.getElementById('lightbox-img').src = src;
-  document.getElementById('lightbox-modal').classList.remove('hidden');
-}
-
-function closeLightbox() {
-  document.getElementById('lightbox-modal').classList.add('hidden');
-}
-
-function calculateSolar() {
-  const monthlyBill = parseFloat(document.getElementById('calc-bill').value) || 0;
-  if(monthlyBill <= 0) { alert('Please enter a valid monthly bill.'); return; }
-  const estimatedUnits = monthlyBill / 8;
-  const recommendedKw = Math.max(1, Math.round(estimatedUnits / 120 * 10) / 10);
-  const grossCost = recommendedKw * 55000;
-  const subsidy = recommendedKw <= 3 ? (recommendedKw * 18000) : 78000;
-  const netCost = grossCost - subsidy;
-
-  document.getElementById('calc-results').classList.remove('hidden');
-  document.getElementById('res-kw').innerText = recommendedKw;
-  document.getElementById('res-cost').innerText = grossCost.toLocaleString('en-IN');
-  document.getElementById('res-subsidy').innerText = subsidy.toLocaleString('en-IN');
-  document.getElementById('res-net').innerText = netCost.toLocaleString('en-IN');
-}
+let leads=JSON.parse(localStorage.getItem('k_leads')||'[]');
+let masters=JSON.parse(localStorage.getItem('k_masters')||'{"panels":["Waaree","Adani","Vikram Solar","Tata Power Solar","Goldi Solar","Saatvik","Other"],"inverters":["Growatt","Sungrow","GoodWe","Fronius","Havells","Polycab","Other"],"structures":["GI Structure","Aluminium","Elevated","Ground Mount","Shed / Tin Roof"],"docs":["Aadhaar Card","Electricity Bill","Bank Passbook / Cancelled Cheque","Roof / Site Photo"]}');
+let user=JSON.parse(localStorage.getItem('k_user')||'null');
+let mode=localStorage.getItem('k_mode')||'Field';
+let curRole='Admin';
+function pickRole(r){curRole=r;document.getElementById('uRole').value=r;document.getElementById('btnAdmin').className=r=='Admin'?'':'ghost';document.getElementById('btnTeam').className=r=='Team'?'':'ghost';}
+if(user){document.getElementById('loginPage').style.display='none';}
+document.getElementById('modeLabel').innerText=mode;
+function doLogin(){let n=document.getElementById('uName').value.trim(),t=document.getElementById('uTeam').value.trim(),p=document.getElementById('uPass').value,r=document.getElementById('uRole').value;if(!n||!t)return alert('Enter Name & Team Name');if(r=='Admin'&&p!=='kshitij123')return alert('Wrong Admin Password');user={name:n,role:r,team:t};localStorage.setItem('k_user',JSON.stringify(user));location.reload();}
+function openSwitch(){document.getElementById('switchPopup').style.display='flex';}
+function closeSwitch(){document.getElementById('switchPopup').style.display='none';}
+function setMode(m){mode=m;localStorage.setItem('k_mode',m);document.getElementById('modeLabel').innerText=m;closeSwitch();render();}
+function visible(l){if(!user)return false;if(mode=='Office'&&user.role=='Admin')return true;if(mode=='Team')return l.team==user.team;if(mode=='Field')return l.owner==user.name;if(user.role=='Admin')return true;if(user.role=='Team Head')return l.team==user.team;return l.owner==user.name;}
+function save(){localStorage.setItem('k_leads',JSON.stringify(leads));localStorage.setItem('k_masters',JSON.stringify(masters));render();}
+function fillMasters(){let p=document.getElementById('fPanel');p.innerHTML=masters.panels.map(x=>`<option>${x}</option>`).join('');let iv=document.getElementById('fInv');iv.innerHTML=masters.inverters.map(x=>`<option>${x}</option>`).join('');let s=document.getElementById('fStruct');s.innerHTML=masters.structures.map(x=>`<option>${x}</option>`).join('');let dc=document.getElementById('docChecks');dc.innerHTML=masters.docs.map((d,i)=>`<label class="chk"><input type="checkbox" class="docChk" data-idx="${i}"> ${d}</label>`).join('');let ml=document.getElementById('masterList');let t=document.getElementById('masterType').value;ml.innerHTML='<b>Current:</b> '+masters[t].join(' • ');}
+function addMaster(){let t=document.getElementById('masterType').value,v=document.getElementById('masterVal').value.trim();if(!v)return alert('Type value');if(!masters[t].includes(v))masters[t].push(v);document.getElementById('masterVal').value='';save();fillMasters();alert('Added to Master!');}
+function delMaster(){let t=document.getElementById('masterType').value,v=document.getElementById('masterVal').value.trim();masters[t]=masters[t].filter(x=>x!==v);document.getElementById('masterVal').value='';save();fillMasters();}
+document.getElementById('masterType').onchange=fillMasters;
+function addLead(){let m=document.getElementById('fMobile').value.trim(),n=document.getElementById('fName').value.trim();if(!n||!m)return alert('Name & Mobile required');let price=+document.getElementById('fPrice').value||0,adv=+document.getElementById('fAdvance').value||0;let docs={};document.querySelectorAll('.docChk').forEach(c=>{docs[c.dataset.idx]=c.checked});let obj={name:n,mobile:m,village:document.getElementById('fVillage').value,interest:document.getElementById('fInterest').value,status:document.getElementById('fStatus').value,panel:document.getElementById('fPanel').value,watt:document.getElementById('fWatt').value,size:document.getElementById('fSize').value,inverter:document.getElementById('fInv').value,invType:document.getElementById('fInvType').value,struct:document.getElementById('fStruct').value,price:price,subsidy:+document.getElementById('fSubsidy').value||0,advance:adv,balance:price-adv,pay:document.getElementById('fPay').value,follow:document.getElementById('fFollow').value,install:document.getElementById('fInstall').value,remark:document.getElementById('fRemark').value,docs:docs,owner:user.name,team:user.team};let ex=leads.findIndex(x=>x.mobile==m);if(ex>=0)leads[ex]={...leads[ex],...obj};else leads.unshift(obj);save();alert('Lead Saved!');}
+function del(i){if(user.role=='Sales')return alert('Only Admin / Team Head can delete');if(confirm('Delete this lead?')){leads.splice(i,1);save();}}
+function toggleDoc(i,key){leads[i].docs=leads[i].docs||{};leads[i].docs[key]=!leads[i].docs[key];save();}
+function makeQuote(i){let l=leads[i];let {jsPDF}=window.jspdf;let d=new jsPDF();d.setFontSize(20);d.setTextColor(213,0,0);d.text("KSHITIJ SOLAR",20,20);d.setFontSize(11);d.setTextColor(0,0,0);d.text("Infrastructure & Housing | Since 2016 | Lucknow",20,28);d.text("Solar Energy For Better Tomorrow",20,34);d.line(20,38,190,38);d.setFontSize(14);d.text("QUOTATION",20,48);d.setFontSize(12);d.text("Customer: "+(l.name||''),20,60);d.text("Mobile: "+(l.mobile||''),20,68);d.text("Village / City: "+(l.village||''),20,76);d.text("System Size: "+(l.size||''),20,88);d.text("Panel: "+(l.panel||'')+" "+(l.watt||''),20,96);d.text("Inverter: "+(l.inverter||'')+" "+(l.invType||''),20,104);d.text("Structure: "+(l.struct||''),20,112);d.setFontSize(13);d.text("Total Price: Rs. "+(l.price||0),20,126);d.text("Subsidy: Rs. "+(l.subsidy||0),20,134);d.text("Advance Paid: Rs. "+(l.advance||0),20,142);d.text("Balance: Rs. "+(l.balance||0),20,150);d.setFontSize(10);d.setTextColor(100,100,100);d.text("This quotation is valid for 7 days. Subsidy as per MNRE guidelines.",20,168);d.text("Thank you for choosing KSHITIJ SOLAR, Lucknow.",20,176);d.save("Quotation-"+l.name+".pdf");}
+function render(){let q=(document.getElementById('search').value||'').toLowerCase();let vis=leads.filter(visible);let isOffice=(mode=='Office'&&user&&user.role=='Admin');document.getElementById('masterCard').style.display=isOffice?'block':'none';document.getElementById('excelCard').style.display=isOffice?'block':'none';document.getElementById('c1').innerText=vis.length;document.getElementById('c2').innerText=vis.filter(x=>x.status=='New').length;document.getElementById('c3').innerText=vis.filter(x=>x.status=='Site Visit').length;document.getElementById('c4').innerText=vis.filter(x=>x.status=='Installed').length;let today=new Date().toISOString().slice(0,10);let todays=vis.filter(x=>x.follow==today);document.getElementById('followTop').innerHTML=todays.length?`<b>📞 Today's Follow-up: ${todays.length} leads</b><br><span style="font-size:13px;color:#555">${todays.map(x=>x.name+' ('+x.mobile+')').join(' • ')}</span>`:`<b>📞 Today's Follow-up: 0 leads</b><br><span style="font-size:13px;color:#555">No follow-up today.</span>`;let html='';vis.forEach(l=>{if(q&&!(l.name+l.mobile+l.village).toLowerCase().includes(q))return;let realIdx=leads.indexOf(l);let docs=l.docs||{};let docHtml=masters.docs.map((dn,di)=>`<label style="font-size:13px"><input type="checkbox" ${docs[di]?'checked':''} onchange="toggleDoc(${realIdx},'${di}')"> ${dn}</label> `).join('');html+=`<div class="lead"><b>${l.name}</b> <span class="pill">${l.status}</span><span class="pill">${l.size||''} ${l.panel||''}</span><br><span style="color:#666">📞 ${l.mobile} • 📍 ${l.village||''}</span><br><span style="font-size:13px">☀️ ${l.panel||'-'} ${l.watt||''} • Inv: ${l.inverter||'-'} ${l.invType||''} • ${l.struct||''}</span><br><span style="font-size:13px">💰 Price ₹${l.price||0} • Adv ₹${l.advance||0} • Bal ₹${l.balance||0} • Subsidy ₹${l.subsidy||0}</span><br><span style="font-size:13px">👤 ${l.owner||''} • Team: ${l.team||''} • Follow: ${l.follow||'-'}</span><br><span style="font-size:13px">📝 ${l.remark||''}</span><div style="margin-top:10px;background:#FFFEF5;border:1px solid #FFE082;border-radius:12px;padding:10px"><b style="font-size:13px">📄 Documents</b><br>${docHtml}</div><div class="row" style="margin-top:10px"><a href="tel:${l.mobile}" style="flex:1;text-align:center;background:#00A651;color:#fff;padding:10px;border-radius:12px;text-decoration:none">📞 Call</a><a href="https://wa.me/91${l.mobile}" target="_blank" style="flex:1;text-align:center;background:#25D366;color:#fff;padding:10px;border-radius:12px;text-decoration:none">💬 WhatsApp</a><button style="flex:1;background:#fff;color:#E53935;border:1.5px solid #E53935" onclick="del(${realIdx})">Delete</button></div><button class="ghost" onclick="makeQuote(${realIdx})">📄 Download Quotation PDF</button></div>`});document.getElementById('list').innerHTML=html||'<p style="text-align:center;color:#888">No leads found</p>';}
+function importExcel(){let f=document.getElementById('excelFile').files[0];if(!f)return alert('Select Excel file first');let r=new FileReader();r.onload=e=>{let wb=XLSX.read(e.target.result,{type:'array'});let rows=XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]]);let cnt=0;rows.forEach(row=>{let mob=String(row.Mobile||row.mobile||'').trim();if(!mob)return;let price=+row.Price||0,adv=+row.Advance||0;let obj={name:row.Name||'',mobile:mob,village:row.Village||'',status:row.Status||'New',panel:row.PanelBrand||'',size:row.SystemSize||'',inverter:row.InverterBrand||'',price:price,subsidy:+row.Subsidy||0,advance:adv,balance:price-adv,follow:row.FollowupDate||'',remark:row.Remark||'',owner:row.Owner||user.name,team:row.Team||user.team};let ex=leads.findIndex(x=>x.mobile==mob);if(ex>=0)leads[ex]={...leads[ex],...obj};else leads.unshift(obj);cnt++;});save();document.getElementById('impMsg').innerText='✅ Imported '+cnt+' leads!';};r.readAsArrayBuffer(f);}
+function exportExcel(){let vis=leads.filter(visible);let ws=XLSX.utils.json_to_sheet(vis);let wb=XLSX.utils.book_new();XLSX.utils.book_append_sheet(wb,ws,'Leads');XLSX.writeFile(wb,'Kshitij-Solar-Leads.xlsx');}
+fillMasters();render();
