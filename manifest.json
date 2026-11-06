@@ -1,15 +1,1 @@
-{
-  "name": "Kshitij Solar Operations",
-  "short_name": "Kshitij Solar",
-  "start_url": "./index.html",
-  "display": "standalone",
-  "background_color": "#FFFDE7",
-  "theme_color": "#D32F2F",
-  "icons": [
-    {
-      "src": "logo.jpg",
-      "sizes": "192x192",
-      "type": "image/jpeg"
-    }
-  ]
-}
+{"name":"KSHITIJ SOLAR - Lucknow","short_name":"KSHITIJ SOLAR","start_url":".","display":"standalone","background_color":"#D50000","theme_color":"#D50000","icons":[{"src":"logo.jpg","sizes":"512x512","type":"image/jpeg"}]}
